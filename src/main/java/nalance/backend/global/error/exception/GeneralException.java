@@ -1,11 +1,9 @@
-package nalance.backend.global.apiPayload.exception;
-
-package umc.spring.apiPayload.exception;
+package nalance.backend.global.error.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import umc.spring.apiPayload.code.BaseErrorCode;
-import umc.spring.apiPayload.code.ErrorReasonDTO;
+import nalance.backend.global.error.code.BaseErrorCode;
+import nalance.backend.global.error.code.ErrorReasonDTO;
 
 @Getter
 @AllArgsConstructor

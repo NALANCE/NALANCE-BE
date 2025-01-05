@@ -1,4 +1,4 @@
-package nalance.backend.global.apiPayload.code;
+package nalance.backend.global.error.code;
 
 import lombok.Builder;
 import lombok.Getter;

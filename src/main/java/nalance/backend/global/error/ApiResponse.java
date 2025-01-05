@@ -1,12 +1,12 @@
-package nalance.backend.global.apiPayload;
+package nalance.backend.global.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import nalance.backend.global.apiPayload.code.BaseCode;
-import nalance.backend.global.apiPayload.code.status.SuccessStatus;
+import nalance.backend.global.error.code.BaseCode;
+import nalance.backend.global.error.code.status.SuccessStatus;
 
 @Getter
 @AllArgsConstructor

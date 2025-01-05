@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url:
+    username:
+    password:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+  sql:
+    init:
+      mode: never
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        hbm2ddl:
+          auto: update
+        default_batch_fetch_size: 1000
+
+  cloud:
+    aws:
+      credentials:
+        access-key: YOUR_AWS_ACCESS_KEY
+        secret-key: YOUR_AWS_SECRET_KEY
+      s3:
+        bucket: YOUR_BUCKET_NAME
+      region:
+        static: YOUR_REGION

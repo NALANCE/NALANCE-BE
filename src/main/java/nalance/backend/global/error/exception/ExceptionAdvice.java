@@ -1,9 +1,11 @@
-package nalance.backend.global.apiPayload.exception;
+package nalance.backend.global.error.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import nalance.backend.global.apiPayload.ApiResponse;
+import nalance.backend.global.error.ApiResponse;
+import nalance.backend.global.error.code.ErrorReasonDTO;
+import nalance.backend.global.error.code.status.ErrorStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -15,9 +17,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import nalance.backend.global.apiPayload.exception.ApiResponse;
-import umc.spring.apiPayload.code.ErrorReasonDTO;
-import umc.spring.apiPayload.code.status.ErrorStatus;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
