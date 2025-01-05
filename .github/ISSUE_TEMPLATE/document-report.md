@@ -1,7 +1,7 @@
 ---
-name: ":memo: Document"
+name: "📝 Document"
 about: 문서에 관해 적습니다
-title: ":memo: [Document] - "
+title: "📝 [Document] - "
 labels: ":memo: docs"
 assignees: ''
 
