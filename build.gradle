@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.1'
     id 'io.spring.dependency-management' version '1.1.7'
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'nalance'
@@ -53,9 +52,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 
-    // Spring Security OAuth2
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
     // QueryDSL
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
@@ -69,9 +65,6 @@ dependencies {
     // Spring Data Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-    // Spring WebSocket
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
     // Spring Boot DevTools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
@@ -83,33 +76,20 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java', 'src/main/resources']
-        }
-    }
-}
-
 // Querydsl 설정부
 def generated = 'src/main/generated'
 
-querydsl {
-    jpa = true
-    querydslSourcesDir = generated
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
 }
 
+// java source set 에 querydsl QClass 위치 추가
 sourceSets {
-    main.java.srcDir generated
+    main.java.srcDirs += [ generated ]
 }
 
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    querydsl.extendsFrom compileClasspath
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+    delete file(generated)
 }
