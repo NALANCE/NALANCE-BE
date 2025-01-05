@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Ignore QueryDSL generated Q files ###
+src/main/generated/
