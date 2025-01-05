@@ -1,4 +1,4 @@
-package nalance.backend.domain.family_space.entity;
+package nalance.backend.domain.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
