@@ -8,25 +8,24 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@DynamicUpdate
 @DynamicInsert
+@DynamicUpdate
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Member extends BaseEntity {
+public class Category extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long categoryId;
 
-    private String nickname;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(nullable = false)
-    private Boolean isActivated;
+    private String categoryName;
+
+    @Column(nullable = false)
+    private String color;
 }

@@ -1,0 +1,45 @@
+package nalance.backend.domain.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import nalance.backend.global.common.BaseEntity;
+import nalance.backend.global.common.enums.Status;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@DynamicInsert
+@DynamicUpdate
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+public class Todo extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long todoId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @Column(nullable = false)
+    private String todoName;
+
+    @Column(nullable = false)
+    private int duration;
+
+    @Column(nullable = false)
+    private LocalDateTime date;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
+}

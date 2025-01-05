@@ -2,31 +2,27 @@ package nalance.backend.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import nalance.backend.global.common.BaseEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@DynamicUpdate
 @DynamicInsert
+@DynamicUpdate
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Member extends BaseEntity {
+public class MemberAgree {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long memberAgreeId;
 
-    private String nickname;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
-    private Boolean isActivated;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "terms_id", nullable = false)
+    private Terms terms;
 }
