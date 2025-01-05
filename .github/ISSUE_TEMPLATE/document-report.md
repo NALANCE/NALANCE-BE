@@ -1,7 +1,7 @@
 ---
-name: Document report
-about: Write document
-title: ''
+name: ":memo: Document"
+about: 문서에 관해 적습니다
+title: ":memo: [Document] - "
 labels: ":memo: docs"
 assignees: ''
 
