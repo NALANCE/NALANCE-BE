@@ -1,7 +1,9 @@
-package nalance.backend.domain.entity;
+package nalance.backend.domain.terms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import nalance.backend.global.common.BaseEntity;
+import nalance.backend.global.common.enums.Type;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -12,17 +14,14 @@ import org.hibernate.annotations.DynamicUpdate;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class MemberAgree {
+public class Terms extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberAgreeId;
+    private Long termsId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "terms_id", nullable = false)
-    private Terms terms;
+    @Enumerated(EnumType.STRING)
+    private Type type;
 }

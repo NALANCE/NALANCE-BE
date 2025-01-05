@@ -1,7 +1,9 @@
-package nalance.backend.domain.entity;
+package nalance.backend.domain.todo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import nalance.backend.domain.category.entity.Category;
+import nalance.backend.domain.member.entity.Member;
 import nalance.backend.global.common.BaseEntity;
 import nalance.backend.global.common.enums.Status;
 import org.hibernate.annotations.DynamicInsert;

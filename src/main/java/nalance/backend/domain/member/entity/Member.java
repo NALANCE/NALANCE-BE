@@ -1,4 +1,4 @@
-package nalance.backend.domain.entity;
+package nalance.backend.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
