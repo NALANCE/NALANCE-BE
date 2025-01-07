@@ -48,7 +48,7 @@ jobs:
           name: umc7thServer
           path: build/libs/
 
-      - name: Deploy to EC2  # EC2에 배포
+      - name: Deploy to EC2 Configure RDS Connection  # EC2에 배포 및 RDS 연동 설정
         env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
@@ -60,10 +60,6 @@ jobs:
         run: |
           echo "$EC2_SSH_KEY" > private_key.pem
           chmod 600 private_key.pem
-          
-          # DB_URL 생성
-          DB_URL="jdbc:mysql://${RDS_HOST}:3306/${RDS_DB_NAME}"
-          echo "DB_URL=$DB_URL"
         
           jar_file=$(find build/libs -name '*.jar' ! -name '*plain.jar' | head -n 1)
           scp -i private_key.pem -o StrictHostKeyChecking=no "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/umc7thServer.jar
@@ -72,7 +68,7 @@ jobs:
             pgrep java | xargs -r kill -15  # 기존에 실행 중인 Java 프로세스 종료
             sleep 10
             nohup java -Dspring.profiles.active=database \
-              -DDB_URL=$DB_URL \
+              -DDB_URL=jdbc:mysql://${RDS_HOST}:3306/${RDS_DB_NAME} \
               -DDB_USERNAME=$RDS_USERNAME \
               -DDB_PASSWORD=$RDS_PASSWORD \
               -jar /home/$EC2_USERNAME/umc7thServer.jar > app.log 2>&1 &  # 새 버전 애플리케이션 실행
