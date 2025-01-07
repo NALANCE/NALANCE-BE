@@ -31,6 +31,9 @@ jobs:
         with:
           arguments: build
 
+      - name: Build without Tests  # 테스트 제외하고 빌드
+        run: ./gradlew build -x test
+
       - name: Upload build artifact  # 빌드된 아티팩트 업로드
         uses: actions/upload-artifact@v3
         with:
