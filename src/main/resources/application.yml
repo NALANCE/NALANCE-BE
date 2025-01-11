@@ -1,25 +1,22 @@
 spring:
-  datasource:
-#    url: jdbc:mysql://nalance-db.c56yu8oqutoa.ap-northeast-2.rds.amazonaws.com:3306/nalance-db
-#    username: nalance_master
-#    password: Nalance2025!!
-    url: jdbc:mysql://localhost:3306/nalance
-    username: root
-    password: 1234
+  profiles:
+    include:
+      - database
 
-    driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
       mode: never
+
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         show_sql: true
-        format_sql: true
+        format_sql: false
+        generate_ddl: true
         use_sql_comments: true
         hbm2ddl:
-          auto: create
+          auto: update
         default_batch_fetch_size: 1000
     database: mysql
 

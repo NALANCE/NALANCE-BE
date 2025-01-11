@@ -9,9 +9,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryQueryServiceImpl {
+public class CategoryQueryServiceImpl implements CategoryQueryService{
     private final CategoryRepository categoryRepository;
     // 조회: 특정 멤버의 모든 카테고리 조회
+    @Override
     public List<Category> getCategoriesByMember(Long memberId) {
         return categoryRepository.findCategoriesByMember_MemberId(memberId);
     }

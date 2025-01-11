@@ -2,24 +2,22 @@ package nalance.backend.domain.category.dto;
 
 import lombok.*;
 
-@Data
-@Builder
 public class CategoryDTO {
-    @Data
-    @Builder
+    @Getter
     public static class CategoryRequest {
         String categoryName;
         String color;
     }
-    @Data
-    @Builder
+    @Getter
     public static class CategoryUpdateRequest {
         Long categoryId;
         String categoryName;
         String color;
     }
-    @Data
     @Builder
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class CategoryResponse {
         String categoryName;
         String color;

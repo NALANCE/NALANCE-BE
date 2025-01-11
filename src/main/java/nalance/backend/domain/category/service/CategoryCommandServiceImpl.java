@@ -5,11 +5,14 @@ import nalance.backend.domain.category.dto.CategoryDTO;
 import nalance.backend.domain.category.entity.Category;
 import nalance.backend.domain.category.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CategoryCommandServiceImpl implements CategoryCommandService{
     private final CategoryRepository categoryRepository;
     @Override

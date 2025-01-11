@@ -38,7 +38,3 @@ out/
 
 ### Ignore QueryDSL generated Q files ###
 src/main/generated/
-
-### Ignore application.yml
-src/resources/application.yml
-src/resources/application-database.yml
