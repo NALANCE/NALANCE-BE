@@ -16,7 +16,12 @@ public enum ErrorStatus implements BaseErrorCode {
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
     // Category 관련 에러
     CATEGORY_NOT_FOUND(HttpStatus.BAD_REQUEST, "CATEGORY4001", "카테고리가 없습니다."),
-    CATEGORY_NOT_EXIST(HttpStatus.BAD_REQUEST, "CATEGORY4002", "카테고리명은 필수 입니다.");
+    CATEGORY_NOT_EXIST(HttpStatus.BAD_REQUEST, "CATEGORY4002", "카테고리명은 필수 입니다."),
+
+    // 이메일 관련 에러
+    FAIL_SEND_EMAIL(HttpStatus.BAD_REQUEST, "EMAIL4001", "이메일 전송에 실패했습니다."),
+    NOT_FOUND_EMAIL_CODE(HttpStatus.NOT_FOUND, "EMAIL4002", "해당 이메일로 전송된 코드가 없습니다."),
+    INCORRECT_EMAIL_CODE(HttpStatus.BAD_REQUEST, "EMAIL4003", "인증번호가 일치하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

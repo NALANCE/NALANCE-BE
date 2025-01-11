@@ -8,14 +8,15 @@ import nalance.backend.domain.category.service.CategoryCommandServiceImpl;
 import nalance.backend.domain.category.service.CategoryQueryServiceImpl;
 import nalance.backend.global.error.ApiResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
-@Tag(name = "category", description = "카테고리 API")
-@Controller
+@RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/v0")
+@Tag(name = "카테고리 컨트롤러")
 public class CategoryController {
     private final CategoryCommandServiceImpl categoryCommandService;
     private final CategoryQueryServiceImpl categoryQueryService;
