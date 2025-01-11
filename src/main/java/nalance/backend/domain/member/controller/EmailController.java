@@ -48,4 +48,20 @@ public class EmailController {
         emailCommandService.verificationEmailCode(verificationEmailCodeRequest);
         return ApiResponse.onSuccess("코드 인증 성공");
     }
+
+    @PostMapping("/picture/send-screenshot")
+    @Operation(summary = "캡쳐한 사진을 유저의 이메일로 보내는 API", description = """
+        캡쳐한 사진을 유저의 이메일로 보내는 API입니다.
+        
+        유저의 토큰을 헤더로 주세요. (구현에 따라 변경 가능성O)
+        """)
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EMAIL4001", description = "이메일 전송에 실패했습니다.")
+    })
+    public ApiResponse<String> sendImageToEmail(@RequestBody @Valid EmailImageSendRequest emailImageSendRequest) {
+        // TODO 헤더 토큰 받기
+        emailCommandService.sendImageToEmail(emailImageSendRequest);
+        return ApiResponse.onSuccess("사진 전송 성공");
+    }
 }

@@ -7,4 +7,6 @@ public interface EmailCommandService {
     void sendVerificationCodeToEmail(EmailSendVerificationRequest request);
 
     void verificationEmailCode(VerificationEmailCodeRequest request);
+
+    void sendImageToEmail(EmailImageSendRequest request);
 }
