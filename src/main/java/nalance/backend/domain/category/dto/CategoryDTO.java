@@ -13,6 +13,13 @@ public class CategoryDTO {
     }
     @Data
     @Builder
+    public static class CategoryUpdateRequest {
+        Long categoryId;
+        String categoryName;
+        String color;
+    }
+    @Data
+    @Builder
     public static class CategoryResponse {
         String categoryName;
         String color;

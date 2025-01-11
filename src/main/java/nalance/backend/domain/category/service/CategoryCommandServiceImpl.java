@@ -35,4 +35,25 @@ public class CategoryCommandServiceImpl implements CategoryCommandService{
         categoryRepository.saveAll(categories);
 
     }
+
+    // 특정 멤버의 카테고리 수정
+    @Override
+    public Category updateCategory(Long memberId, CategoryDTO.CategoryUpdateRequest categoryRequest) {
+        Category category = categoryRepository.findByCategoryIdAndMember_MemberId(categoryRequest.getCategoryId(), memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found for this user."));
+        category = Category.builder()
+                .categoryName(categoryRequest.getCategoryName())
+                .color(categoryRequest.getColor())
+                .build();
+        return categoryRepository.save(category);
+    }
+
+    // 특정 멤버의 카테고리 삭제
+    @Override
+    public void deleteCategory(Long memberId, Long categoryId) {
+        if (!categoryRepository.existsByCategoryIdAndMember_MemberId(categoryId, memberId)) {
+            throw new IllegalArgumentException("Category not found for this user.");
+        }
+        categoryRepository.deleteById(categoryId);
+    }
 }
