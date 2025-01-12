@@ -34,8 +34,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 new AntPathRequestMatcher("/api-docs/**"),
                                 new AntPathRequestMatcher("/error"),
                                 new AntPathRequestMatcher("/favicon.ico"),
-                                new AntPathRequestMatcher("/health"),
-                                new AntPathRequestMatcher("/api/v0/s3/presigned/upload")
+                                new AntPathRequestMatcher("/health")
                         ).permitAll()
                         .anyRequest().authenticated())
                 ;
@@ -52,6 +51,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOriginPatterns(
                         "http://localhost:8080",
+                        "http://54.180.228.18:8080",
                         "http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
