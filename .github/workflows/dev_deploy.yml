@@ -17,13 +17,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Make application.yml  # application.yml 파일 생성
-        run: |
-          cd ./src/main/resources
-          echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
-          echo "${{ secrets.APPLICATION_DATABASE_YML }}" > ./application-database.yml
-          echo "${{ secrets.APPLICATION_DISCORD_YML }}" > ./application-discord.yml
-        shell: bash
+#      - name: Make application.yml  # application.yml 파일 생성
+#        run: |
+#          cd ./src/main/resources
+#          echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+#          echo "${{ secrets.APPLICATION_DATABASE_YML }}" > ./application-database.yml
+#          echo "${{ secrets.APPLICATION_DISCORD_YML }}" > ./application-discord.yml
+#        shell: bash
 
       - name: Grant execute permission for gradlew  # gradlew 실행 권한 부여
         run: chmod +x gradlew
@@ -57,6 +57,7 @@ jobs:
           RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
           RDS_HOST: ${{ secrets.RDS_HOST }}
           RDS_DB_NAME: ${{ secrets.RDS_DB_NAME }}
+          DISCORD_URL: ${{ secrets.DISCORD_URL }}
         run: |
           echo "$EC2_SSH_KEY" > private_key.pem
           chmod 600 private_key.pem
