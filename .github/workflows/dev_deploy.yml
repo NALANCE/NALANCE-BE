@@ -21,6 +21,8 @@ jobs:
         run: |
           cd ./src/main/resources
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+          echo "${{ secrets.APPLICATION_DATABASE_YML }}" > ./application-database.yml
+          echo "${{ secrets.APPLICATION_DISCORD_YML }}" > ./application-discord.yml
         shell: bash
 
       - name: Grant execute permission for gradlew  # gradlew 실행 권한 부여
@@ -65,12 +67,10 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
             pgrep java | xargs -r kill -15  # 기존에 실행 중인 Java 프로세스 종료
             sleep 10
-            nohup java -Dspring.profiles.active=database \
+            nohup java -Dspring.profiles.active=dev \
               -DDB_URL=jdbc:mysql://${RDS_HOST}:3306/${RDS_DB_NAME} \
               -DDB_USERNAME=$RDS_USERNAME \
               -DDB_PASSWORD=$RDS_PASSWORD \
               -jar /home/$EC2_USERNAME/umc7thServer.jar > app.log 2>&1 &  # 새 버전 애플리케이션 실행
           "
           rm -f private_key.pem  # 민감한 정보 삭제
-          
-          # Trigger redeployment
