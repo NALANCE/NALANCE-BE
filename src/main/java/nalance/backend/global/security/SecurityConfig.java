@@ -27,7 +27,10 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(
                                 new AntPathRequestMatcher("/"),
-                                new AntPathRequestMatcher("/api/v0/auth/**"),
+                                new AntPathRequestMatcher("/api/v0/emails/verification"),
+                                new AntPathRequestMatcher("/api/v0/emails/send-verification"),
+                                new AntPathRequestMatcher("/api/v0/login"),
+                                new AntPathRequestMatcher("/api/v0/members"),
                                 new AntPathRequestMatcher("/swagger-ui.html"),
                                 new AntPathRequestMatcher("/swagger-ui/**"),
                                 new AntPathRequestMatcher("/v3/api-docs/**"),
