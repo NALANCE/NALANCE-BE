@@ -1,0 +1,14 @@
+package nalance.backend.domain.member.service;
+
+import static  nalance.backend.domain.member.dto.MemberDTO.MemberRequest.*;
+import static  nalance.backend.domain.member.dto.MemberDTO.MemberResponse.*;
+
+public interface MemberCommandService {
+    void joinMember(JoinRequest request);
+
+    LoginResponse login(LoginRequest request);
+
+    void updateEmail(MemberEmailUpdateRequest request);
+    void updatePassword(MemberPasswordUpdateRequest request);
+    void deleteMember();
+}
