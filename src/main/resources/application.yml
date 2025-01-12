@@ -2,6 +2,7 @@ spring:
   profiles:
     include:
       - database
+      - discord
 
   sql:
     init:
