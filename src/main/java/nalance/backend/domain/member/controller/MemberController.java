@@ -68,7 +68,7 @@ public class MemberController {
     @PatchMapping("/password")
     @Operation(
             summary = "비밀번호 변경 API",
-            description = "로그인된 상태에서 새로운 비밀번호를 입력하고 비밀번호 확인을 입력하면 변경됩니다.",
+            description = "로그인된 상태에서 새로운 비밀번호와 확인 비밀번호를 입력하는 비밀번호 변경 API입니다.",
             security = @SecurityRequirement(name = "JWT TOKEN")
     )
     @ApiResponses({
