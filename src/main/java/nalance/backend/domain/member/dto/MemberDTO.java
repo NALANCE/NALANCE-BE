@@ -1,6 +1,9 @@
 package nalance.backend.domain.member.dto;
 
 import lombok.*;
+import nalance.backend.domain.terms.dto.MemberAgreeDTO;
+
+import java.util.List;
 
 public class MemberDTO {
 
@@ -10,6 +13,7 @@ public class MemberDTO {
             private String email;
             private String password;
             // 닉네임은 고려하지 않았음, 추후 수정 가능
+            private List<MemberAgreeDTO.AgreeTermsRequest> terms; //약관 동의 리스트
         }
 
         @Getter
@@ -49,6 +53,7 @@ public class MemberDTO {
             private String email;
             private String nickname;
             private boolean isActivated;
+            private List<MemberAgreeDTO.AgreeTermsResponse> agreedTerms; // 회원이 동의한 약관 목록
         }
     }
 

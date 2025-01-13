@@ -2,9 +2,13 @@ package nalance.backend.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import nalance.backend.domain.terms.entity.MemberAgree;
 import nalance.backend.global.common.BaseEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,4 +33,11 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean isActivated;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MemberAgree> memberAgreeList = new ArrayList<>();
+
+    public void encodePassword(String password) {
+        this.password = password;
+    }
 }
