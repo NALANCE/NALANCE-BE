@@ -65,6 +65,9 @@ dependencies {
     // Spring Data Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     // Spring Boot DevTools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
