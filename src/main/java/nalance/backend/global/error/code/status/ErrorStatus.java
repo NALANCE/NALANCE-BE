@@ -28,8 +28,11 @@ public enum ErrorStatus implements BaseErrorCode {
     FAIL_UPDATE_ID(HttpStatus.BAD_REQUEST, "MEMBER4004", "아이디 변경에 실패했습니다."),
     INCORRECT_PASSWORD_CODE(HttpStatus.BAD_REQUEST, "MEMBER4005", "비밀 번호 확인이 일치하지 않습니다."),
     FAIL_UPDATE_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4006", "비밀번호 변경에 실패했습니다."),
-    FAIL_DELETE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4007", "회원 탈퇴에 실패했습니다.");
+    FAIL_DELETE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4007", "회원 탈퇴에 실패했습니다."),
 
+    // Graph 관련 에러
+    FAIL_TO_RETRIEVE_GRAPH_DATA(HttpStatus.BAD_REQUEST, "GRAPH4001", "그래프 데이터를 조회할 수 없습니다."),
+    FAIL_TO_PROCESS_GRAPH_DATA(HttpStatus.BAD_REQUEST, "GRAPH4002", "그래프 데이터를 처리 중 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
