@@ -3,6 +3,12 @@ spring:
     include:
       - database
       - discord
+      - redis
+      - email
+  data:
+    redis:
+      repositories:
+        enabled: false
 
   sql:
     init:
