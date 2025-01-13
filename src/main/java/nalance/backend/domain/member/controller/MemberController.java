@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.member.service.EmailCommandService;
 import nalance.backend.domain.member.service.MemberCommandService;
+import nalance.backend.domain.member.service.MemberQueryService;
 import nalance.backend.global.error.ApiResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v0/members")
 @Tag(name = "로그인/회원가입 컨트롤러")
 public class MemberController {
-
-    private MemberCommandService memberCommandService;
-    private EmailCommandService emailCommandService;
+    private final MemberCommandService memberCommandService;
+    private final MemberQueryService memberQueryService;
 
     @PostMapping("/")
-    @Operation(summary = "회원가입 API", description = "회원가입에 사용하는 API입니다.")
+    @Operation(summary = "회원가입 API", description = "회원가입 및 약관 동의를 처리하는 API입니다. 회원 정보와 동의한 약관의 ID 목록이 포함됩니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4002", description = "회원가입에 실패했습니다.")
@@ -53,7 +53,7 @@ public class MemberController {
     @PatchMapping("/email")
     @Operation(
             summary = "이메일 수정 API",
-            description = "로그인된 상태에서 이메일을 수정합니다.",
+            description = "로그인된 상태에서 이메일을 수정하는 api입니다. 변경할 이메일 문자열을 포함합니다.",
             security = @SecurityRequirement(name = "JWT TOKEN")
     )
     @ApiResponses({
@@ -96,4 +96,18 @@ public class MemberController {
         return ApiResponse.onSuccess("회원 탈퇴 성공");
     }
 
+    @GetMapping("/")
+    @Operation(
+            summary = "회원 정보 조회 API",
+            description = "로그인된 회원이 자신의 정보를 조회할 수 있는 API입니다.",
+            security = @SecurityRequirement(name = "JWT TOKEN")
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4001", description = "해당 멤버가 존재하지 않습니다.")
+    })
+    public ApiResponse<MemberProfileResponse> getMemberProfile() {
+        MemberProfileResponse memberProfile = memberQueryService.getMemberProfile();
+        return ApiResponse.onSuccess(memberProfile);
+    }
 }
