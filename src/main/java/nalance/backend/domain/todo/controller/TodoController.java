@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class TodoController {
 
     private final TodoQueryService todoQueryService;
-    private TodoCommandService todoCommandService;
+    private final TodoCommandService todoCommandService;
     private final CheckPageValidator checkPageValidator;
 
     @PostMapping("/")
