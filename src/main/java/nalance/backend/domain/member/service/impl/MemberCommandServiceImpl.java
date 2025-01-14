@@ -13,6 +13,8 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     public void joinMember(MemberDTO.MemberRequest.JoinRequest request) {
         // 작성 x
+        // 회원가입 처리
+        // 약관 동의까지 함께 처리
     }
 
     @Override

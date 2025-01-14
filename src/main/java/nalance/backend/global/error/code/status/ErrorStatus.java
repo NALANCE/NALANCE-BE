@@ -28,8 +28,12 @@ public enum ErrorStatus implements BaseErrorCode {
     FAIL_UPDATE_ID(HttpStatus.BAD_REQUEST, "MEMBER4004", "아이디 변경에 실패했습니다."),
     INCORRECT_PASSWORD_CODE(HttpStatus.BAD_REQUEST, "MEMBER4005", "비밀 번호 확인이 일치하지 않습니다."),
     FAIL_UPDATE_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4006", "비밀번호 변경에 실패했습니다."),
-    FAIL_DELETE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4007", "회원 탈퇴에 실패했습니다.");
+    FAIL_DELETE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4007", "회원 탈퇴에 실패했습니다."),
 
+    // Terms 관련 에러
+    FAIL_GET_TERMS(HttpStatus.BAD_REQUEST, "TERMS4001", "약관 목록 조회에 실패했습니다."),
+    FAIl_GET_TERMS_DETAIL(HttpStatus.BAD_REQUEST, "TERMS4002", "개별 약관 조회에 실패했습니다."),
+    NOT_FOUND_TERMS(HttpStatus.NOT_FOUND, "TERMS4003", "해당 약관이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

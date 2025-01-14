@@ -27,7 +27,4 @@ public class MemberAgree {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "terms_id", nullable = false)
     private Terms terms;
-
-    @Column(nullable = false)
-    private Boolean isAgreed;
 }
