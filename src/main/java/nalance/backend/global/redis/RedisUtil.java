@@ -12,7 +12,7 @@ public class RedisUtil {
     private final RedisTemplate<String, String> redisTemplate;
 
     public void saveEmailVerificationCode(String email, String code) {
-        redisTemplate.opsForValue().set(email, code, 5, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(email, code, 1, TimeUnit.DAYS);
     }
 
     public String getEmailVerificationCode(String email) {
