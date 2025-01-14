@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.category.dto.CategoryDTO;
 import nalance.backend.domain.category.entity.Category;
-import nalance.backend.domain.category.service.CategoryCommandServiceImpl;
-import nalance.backend.domain.category.service.CategoryQueryServiceImpl;
+import nalance.backend.domain.category.service.CategoryCommandService;
+import nalance.backend.domain.category.service.CategoryQueryService;
 import nalance.backend.global.error.ApiResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v0")
 @Tag(name = "카테고리 컨트롤러")
 public class CategoryController {
-    private final CategoryCommandServiceImpl categoryCommandService;
-    private final CategoryQueryServiceImpl categoryQueryService;
+    private final CategoryCommandService categoryCommandService;
+    private final CategoryQueryService categoryQueryService;
 
     /**
      * 카테고리 1개 생성
@@ -70,10 +70,8 @@ public class CategoryController {
     })
     public ApiResponse<List<CategoryDTO.CategoryResponse>> getCategoriesByMember(@PathVariable Long memberId) {
         List<Category> categories = categoryQueryService.getCategoriesByMember(memberId);
-        List<CategoryDTO.CategoryResponse> categoryDTOS = categories.stream().map(category -> CategoryDTO.CategoryResponse.builder()
-                .categoryName(category.getCategoryName())
-                .color(category.getColor()).build()).collect(Collectors.toList());
-
+        List<CategoryDTO.CategoryResponse> categoryDTOS = categories.stream().map(category ->
+                CategoryDTO.CategoryResponse.createCategory(category.getCategoryName(), category.getColor())).collect(Collectors.toList());
         return ApiResponse.onSuccess(categoryDTOS);
     }
 

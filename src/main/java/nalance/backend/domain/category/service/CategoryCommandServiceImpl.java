@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.category.dto.CategoryDTO;
 import nalance.backend.domain.category.entity.Category;
 import nalance.backend.domain.category.repository.CategoryRepository;
+import nalance.backend.global.error.code.status.ErrorStatus;
+import nalance.backend.global.error.exception.handler.CategoryHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class CategoryCommandServiceImpl implements CategoryCommandService{
                         .categoryName(categoryRequest.getCategoryName())
                         .color(categoryRequest.getColor())
                         .build();
+        // Todo : set member & exception
         categoryRepository.save(category);
 
     }
@@ -34,7 +36,7 @@ public class CategoryCommandServiceImpl implements CategoryCommandService{
                         .color(categoryRequest.getColor())
                         .build()
         ).collect(Collectors.toList());
-        // 카테고리 리스트 전체 저장
+        // Todo : set member & exception
         categoryRepository.saveAll(categories);
 
     }
@@ -43,11 +45,8 @@ public class CategoryCommandServiceImpl implements CategoryCommandService{
     @Override
     public Category updateCategory(Long memberId, CategoryDTO.CategoryUpdateRequest categoryRequest) {
         Category category = categoryRepository.findByCategoryIdAndMember_MemberId(categoryRequest.getCategoryId(), memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found for this user."));
-        category = Category.builder()
-                .categoryName(categoryRequest.getCategoryName())
-                .color(categoryRequest.getColor())
-                .build();
+                .orElseThrow(() -> new CategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
+        category.updateCategoryDetails(category.getCategoryName(), category.getColor());
         return categoryRepository.save(category);
     }
 
@@ -55,7 +54,7 @@ public class CategoryCommandServiceImpl implements CategoryCommandService{
     @Override
     public void deleteCategory(Long memberId, Long categoryId) {
         if (!categoryRepository.existsByCategoryIdAndMember_MemberId(categoryId, memberId)) {
-            throw new IllegalArgumentException("Category not found for this user.");
+            throw new CategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND);
         }
         categoryRepository.deleteById(categoryId);
     }

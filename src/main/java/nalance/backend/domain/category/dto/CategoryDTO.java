@@ -21,7 +21,7 @@ public class CategoryDTO {
     public static class CategoryResponse {
         String categoryName;
         String color;
-        public CategoryDTO.CategoryResponse createCategory(String categoryName, String color) {
+        public static CategoryDTO.CategoryResponse createCategory(String categoryName, String color) {
             return CategoryResponse.builder()
                     .categoryName(categoryName)
                     .color(color)
