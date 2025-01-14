@@ -2,6 +2,7 @@ spring:
   profiles:
     include:
       - database
+      - discord
 
   sql:
     init:
@@ -19,13 +20,3 @@ spring:
           auto: update
         default_batch_fetch_size: 1000
     database: mysql
-
-  cloud:
-    aws:
-      credentials:
-        access-key: YOUR_AWS_ACCESS_KEY
-        secret-key: YOUR_AWS_SECRET_KEY
-      s3:
-        bucket: YOUR_BUCKET_NAME
-      region:
-        static: YOUR_REGION

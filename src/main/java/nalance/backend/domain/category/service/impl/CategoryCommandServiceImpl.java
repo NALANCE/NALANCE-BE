@@ -1,9 +1,10 @@
-package nalance.backend.domain.category.service;
+package nalance.backend.domain.category.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.category.dto.CategoryDTO;
 import nalance.backend.domain.category.entity.Category;
 import nalance.backend.domain.category.repository.CategoryRepository;
+import nalance.backend.domain.category.service.CategoryCommandService;
 import nalance.backend.global.error.code.status.ErrorStatus;
 import nalance.backend.global.error.exception.handler.CategoryHandler;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CategoryCommandServiceImpl implements CategoryCommandService{
+public class CategoryCommandServiceImpl implements CategoryCommandService {
     private final CategoryRepository categoryRepository;
     @Override
     public void createOneCateory(CategoryDTO.CategoryRequest categoryRequest) {

@@ -27,15 +27,18 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(
                                 new AntPathRequestMatcher("/"),
-                                new AntPathRequestMatcher("/api/v0/auth/**"),
+                                new AntPathRequestMatcher("/api/v0/emails/verification"),
+                                new AntPathRequestMatcher("/api/v0/emails/send-verification"),
+                                new AntPathRequestMatcher("/api/v0/login"),
+                                new AntPathRequestMatcher("/api/v0/members"),
+                                new AntPathRequestMatcher("/api/v0/categories"),
                                 new AntPathRequestMatcher("/swagger-ui.html"),
                                 new AntPathRequestMatcher("/swagger-ui/**"),
                                 new AntPathRequestMatcher("/v3/api-docs/**"),
                                 new AntPathRequestMatcher("/api-docs/**"),
                                 new AntPathRequestMatcher("/error"),
                                 new AntPathRequestMatcher("/favicon.ico"),
-                                new AntPathRequestMatcher("/health"),
-                                new AntPathRequestMatcher("/api/v0/s3/presigned/upload")
+                                new AntPathRequestMatcher("/health")
                         ).permitAll()
                         .anyRequest().authenticated())
                 ;
@@ -52,6 +55,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOriginPatterns(
                         "http://localhost:8080",
+                        "http://54.180.228.18:8080",
                         "http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
