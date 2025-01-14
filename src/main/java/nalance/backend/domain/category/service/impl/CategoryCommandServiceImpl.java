@@ -6,7 +6,7 @@ import nalance.backend.domain.category.entity.Category;
 import nalance.backend.domain.category.repository.CategoryRepository;
 import nalance.backend.domain.category.service.CategoryCommandService;
 import nalance.backend.global.error.code.status.ErrorStatus;
-import nalance.backend.global.error.exception.handler.CategoryHandler;
+import nalance.backend.global.error.handler.CategoryException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -46,7 +46,7 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     @Override
     public Category updateCategory(Long memberId, CategoryDTO.CategoryUpdateRequest categoryRequest) {
         Category category = categoryRepository.findByCategoryIdAndMember_MemberId(categoryRequest.getCategoryId(), memberId)
-                .orElseThrow(() -> new CategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new CategoryException(ErrorStatus.CATEGORY_NOT_FOUND));
         category.updateCategoryDetails(categoryRequest.getCategoryName(), categoryRequest.getColor());
         return categoryRepository.save(category);
     }
@@ -55,7 +55,7 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     @Override
     public void deleteCategory(Long memberId, Long categoryId) {
         if (!categoryRepository.existsByCategoryIdAndMember_MemberId(categoryId, memberId)) {
-            throw new CategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND);
+            throw new CategoryException(ErrorStatus.CATEGORY_NOT_FOUND);
         }
         categoryRepository.deleteById(categoryId);
     }
