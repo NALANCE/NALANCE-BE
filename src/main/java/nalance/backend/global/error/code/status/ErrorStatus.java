@@ -27,6 +27,7 @@ public enum ErrorStatus implements BaseErrorCode {
     FAIL_SEND_EMAIL(HttpStatus.BAD_REQUEST, "EMAIL4001", "이메일 전송에 실패했습니다."),
     NOT_FOUND_EMAIL_CODE(HttpStatus.NOT_FOUND, "EMAIL4002", "해당 이메일로 전송된 코드가 없습니다."),
     INCORRECT_EMAIL_CODE(HttpStatus.BAD_REQUEST, "EMAIL4003", "인증번호가 일치하지 않습니다."),
+    INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, "EMAIL4004", "인증번호 형식이 올바르지 않습니다."),
 
     // Member 관련 에러
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "해당 멤버가 존재하지 않습니다."),
