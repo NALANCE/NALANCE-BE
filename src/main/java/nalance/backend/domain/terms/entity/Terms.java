@@ -7,6 +7,9 @@ import nalance.backend.global.common.enums.Type;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @DynamicInsert
@@ -24,4 +27,7 @@ public class Terms extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Type type;
+
+    @OneToMany(mappedBy = "terms", cascade = CascadeType.ALL)
+    private List<MemberAgree> memberAgreeList = new ArrayList<>();
 }

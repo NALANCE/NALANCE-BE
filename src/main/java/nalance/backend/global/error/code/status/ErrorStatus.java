@@ -39,7 +39,12 @@ public enum ErrorStatus implements BaseErrorCode {
     FAIL_DELETE_TODO(HttpStatus.BAD_REQUEST, "TODO4003", "Todo 삭제에 실패했습니다."),
     FAIL_UPDATE_TODO(HttpStatus.BAD_REQUEST, "TODO4004", "Todo 수정에 실패했습니다."),
     FAIL_COMPLETE_TODO(HttpStatus.BAD_REQUEST, "TODO4005", "Todo 완료에 실패했습니다."),
-    FAIL_QUERY_TODO(HttpStatus.BAD_REQUEST, "TODO4006", "Todo 조회에 실패했습니다.");
+    FAIL_QUERY_TODO(HttpStatus.BAD_REQUEST, "TODO4006", "Todo 조회에 실패했습니다."),
+
+    // Terms 관련 에러
+    FAIL_GET_TERMS(HttpStatus.BAD_REQUEST, "TERMS4001", "약관 목록 조회에 실패했습니다."),
+    FAIl_GET_TERMS_DETAIL(HttpStatus.BAD_REQUEST, "TERMS4002", "개별 약관 조회에 실패했습니다."),
+    NOT_FOUND_TERMS(HttpStatus.NOT_FOUND, "TERMS4003", "해당 약관이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
