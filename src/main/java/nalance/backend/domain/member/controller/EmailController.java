@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "이메일 관련 컨트롤러")
 public class EmailController {
 
-    private EmailCommandService emailCommandService;
+    private final EmailCommandService emailCommandService;
 
     @PostMapping("/send-verification")
     @Operation(summary = "인증 코드 이메일 전송 API", description = "회원가입시 이메일로 인증 코드를 보내는 API입니다.")
