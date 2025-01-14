@@ -85,11 +85,11 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4003", description = "카테고리명은 필수입니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4004", description = "카테고리 색상은 필수 입니다.")
     })
-    public ApiResponse<Category> updateCategory(
+    public ApiResponse<?> updateCategory(
             @RequestParam Long memberId,
             @RequestBody CategoryDTO.CategoryUpdateRequest categoryUpdateRequest) {
-        Category updatedCategory = categoryCommandService.updateCategory(memberId, categoryUpdateRequest);
-        return ApiResponse.onSuccess(updatedCategory);
+        categoryCommandService.updateCategory(memberId, categoryUpdateRequest);
+        return ApiResponse.onSuccess("카테고리가 수정되었습니다.");
     }
 
     // 특정 멤버의 카테고리 삭제

@@ -47,7 +47,7 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     public Category updateCategory(Long memberId, CategoryDTO.CategoryUpdateRequest categoryRequest) {
         Category category = categoryRepository.findByCategoryIdAndMember_MemberId(categoryRequest.getCategoryId(), memberId)
                 .orElseThrow(() -> new CategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
-        category.updateCategoryDetails(category.getCategoryName(), category.getColor());
+        category.updateCategoryDetails(categoryRequest.getCategoryName(), categoryRequest.getColor());
         return categoryRepository.save(category);
     }
 
