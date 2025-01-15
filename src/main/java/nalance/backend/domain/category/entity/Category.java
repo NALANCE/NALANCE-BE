@@ -29,4 +29,14 @@ public class Category extends BaseEntity {
 
     @Column(nullable = false)
     private String color;
+
+    public void updateCategoryDetails(String categoryName, String color) {
+        if (categoryName != null && !categoryName.isBlank()) {
+            this.categoryName = categoryName;
+        }
+        if (color != null && !color.isBlank()) {
+            this.color = color;
+        }
+    }
+
 }
