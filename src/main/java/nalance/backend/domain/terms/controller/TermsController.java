@@ -5,15 +5,20 @@ import static nalance.backend.domain.terms.dto.TermsDTO.TermsResponse.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.member.dto.MemberDTO;
 import nalance.backend.domain.terms.dto.TermsDTO;
+import nalance.backend.domain.terms.entity.Terms;
 import nalance.backend.domain.terms.service.TermsQueryService;
+import nalance.backend.global.validation.annotation.ExistTerms;
+import nalance.backend.global.validation.validator.TermsExistValidator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import nalance.backend.global.error.ApiResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,14 +28,14 @@ import java.util.List;
 public class TermsController {
     private final TermsQueryService termsQueryService;
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "전체 약관 조회 API", description = "전체 약관 목록을 조회하는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "TERMS4001", description = "전체 약관 목록 조회에 실패했습니다.")
     })
     public ApiResponse<List<TermsDetailResponse>> getAllTerms() {
-        List<TermsDetailResponse> termsList = termsQueryService.getAllTerms();
+        List<TermsDTO.TermsResponse.TermsDetailResponse> termsList = termsQueryService.getAllTerms();
         return ApiResponse.onSuccess(termsList);
     }
 
