@@ -23,6 +23,8 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     public void createOneCateory(CategoryDTO.CategoryRequest categoryRequest) {
         // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
         validateCategoryNames(List.of(categoryRequest.getCategoryName()), memberId);
+        // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
+        validateCategoryColors(List.of(categoryRequest.getCategoryName()), memberId);
         Category category = Category.builder()
                         .categoryName(categoryRequest.getCategoryName())
                         .color(categoryRequest.getColor())
@@ -41,6 +43,14 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
 
         if (!categoryRequests.isEmpty()) {
             validateCategoryNames(newCategoryNames, memberId);
+        }
+        // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
+        List<String> newCategoryColors = categoryRequests.stream()
+                .map(CategoryDTO.CategoryRequest::getColor)
+                .toList();
+
+        if (!categoryRequests.isEmpty()) {
+            validateCategoryColors(newCategoryColors, memberId);
         }
         // 카테고리 리스트 생성 및 변환
         List<Category> categories = categoryRequests.stream().map(
@@ -61,6 +71,8 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
                 .orElseThrow(() -> new CategoryException(ErrorStatus.CATEGORY_NOT_FOUND));
         // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
         validateCategoryNames(List.of(categoryRequest.getCategoryName()), memberId);
+        // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
+        validateCategoryColors(List.of(categoryRequest.getCategoryName()), memberId);
 
         category.updateCategoryDetails(categoryRequest.getCategoryName(), categoryRequest.getColor());
         return categoryRepository.save(category);
@@ -90,5 +102,21 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
         if (!duplicateNames.isEmpty()) {
             throw new CategoryException(ErrorStatus.CATEGORY_NAME_ALREADY_EXISTS);
         }
+    }
+
+    // 멤버별 중복된 카테고리 색상 검증 메소드
+    private void validateCategoryColors(List<String> categoryColors, Long memberId) {
+        List<String> existingCategoryColors = categoryRepository.findCategoriesByMember_MemberId(memberId)
+                .stream()
+                .map(Category::getColor)
+                .toList();
+        // 중복인지 확인
+        List<String> duplicateColors = categoryColors.stream()
+                .filter(existingCategoryColors::contains)
+                .toList();
+        if(!duplicateColors.isEmpty()) {
+            throw new CategoryException(ErrorStatus.CATEGORY_COLOR_ALREADY_EXISTS);
+        }
+
     }
 }
