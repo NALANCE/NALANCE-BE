@@ -28,7 +28,8 @@ public class CategoryColorsExistValidator implements ConstraintValidator<ExistCa
                 "#7BCBBE", "#8BCFB6", "#C2E0AE", "#DDE89A"));
         if(!availableColors.contains(value)) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.CATEGORY_COLOR_UNUSABLE.toString()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.CATEGORY_COLOR_UNUSABLE.getMessage()).addConstraintViolation();
+            return false;
         }
         return true;
     }
