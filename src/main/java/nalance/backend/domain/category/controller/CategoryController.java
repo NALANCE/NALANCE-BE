@@ -42,8 +42,8 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
 
     })
-    public ApiResponse<?> createOneCategory(@RequestBody @Valid CategoryDTO.CategoryRequest categoryRequest){
-        categoryCommandService.createOneCateory(categoryRequest);
+    public ApiResponse<?> createOneCategory(@RequestParam Long memberId, @RequestBody @Valid CategoryDTO.CategoryRequest categoryRequest){
+        categoryCommandService.createOneCateory(memberId, categoryRequest);
         return ApiResponse.onSuccess("카테고리가 생성되었습니다.");
     }
 
@@ -64,8 +64,8 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4006", description = "해당 색상은 이미 존재합니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
     })
-    public ApiResponse<?> createManyCategory(@RequestBody @Valid List<CategoryDTO.CategoryRequest> categoryRequest){
-        categoryCommandService.createManyCateory(categoryRequest);
+    public ApiResponse<?> createManyCategory(@RequestParam Long memberId, @RequestBody @Valid List<CategoryDTO.CategoryRequest> categoryRequest){
+        categoryCommandService.createManyCateory(memberId, categoryRequest);
         return ApiResponse.onSuccess("카테고리가 생성되었습니다.");
     }
 

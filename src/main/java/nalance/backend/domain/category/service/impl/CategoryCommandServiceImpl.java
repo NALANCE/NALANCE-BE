@@ -5,6 +5,7 @@ import nalance.backend.domain.category.dto.CategoryDTO;
 import nalance.backend.domain.category.entity.Category;
 import nalance.backend.domain.category.repository.CategoryRepository;
 import nalance.backend.domain.category.service.CategoryCommandService;
+import nalance.backend.domain.member.repository.MemberRepository;
 import nalance.backend.global.error.code.status.ErrorStatus;
 import nalance.backend.global.error.handler.CategoryException;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class CategoryCommandServiceImpl implements CategoryCommandService {
     private final CategoryRepository categoryRepository;
+    private final MemberRepository memberRepository;
     // Todo : memberId 추후 수정 -> createOneCategory, createManyCateory
-    Long memberId = 1L;
+    // Todo refactor: move create method
     @Override
-    public void createOneCateory(CategoryDTO.CategoryRequest categoryRequest) {
+    public void createOneCateory(Long memberId, CategoryDTO.CategoryRequest categoryRequest) {
         // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
         validateCategoryNames(List.of(categoryRequest.getCategoryName()), memberId);
         // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
@@ -28,14 +30,15 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
         Category category = Category.builder()
                         .categoryName(categoryRequest.getCategoryName())
                         .color(categoryRequest.getColor())
+                        .member(memberRepository.findById(memberId).orElseThrow(() -> new CategoryException(ErrorStatus.MEMBER_NOT_FOUND)))
                         .build();
-        // Todo : set member & exception
+
         categoryRepository.save(category);
 
     }
 
     @Override
-    public void createManyCateory(List<CategoryDTO.CategoryRequest> categoryRequests) {
+    public void createManyCateory(Long memberId, List<CategoryDTO.CategoryRequest> categoryRequests) {
         // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
         List<String> newCategoryNames = categoryRequests.stream()
                 .map(CategoryDTO.CategoryRequest::getCategoryName)
@@ -57,9 +60,10 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
                 categoryRequest ->  Category.builder()
                         .categoryName(categoryRequest.getCategoryName())
                         .color(categoryRequest.getColor())
+                        .member(memberRepository.findById(memberId).orElseThrow(() -> new CategoryException(ErrorStatus.MEMBER_NOT_FOUND)))
                         .build()
         ).collect(Collectors.toList());
-        // Todo : set member & exception
+
         categoryRepository.saveAll(categories);
 
     }
