@@ -1,7 +1,6 @@
 package nalance.backend.domain.member.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import nalance.backend.domain.member.dto.EmailDTO.EmailRequest.EmailImageSendRequest;
 import nalance.backend.domain.member.dto.EmailDTO.EmailRequest.EmailSendVerificationRequest;
 import nalance.backend.domain.member.dto.EmailDTO.EmailRequest.VerificationEmailCodeRequest;
 import nalance.backend.domain.member.service.EmailCommandService;
@@ -11,6 +10,7 @@ import nalance.backend.global.error.handler.EmailException;
 import nalance.backend.global.redis.RedisUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -23,7 +23,7 @@ public class EmailCommandServiceImpl implements EmailCommandService {
     @Override
     public void sendVerificationCodeToEmail(EmailSendVerificationRequest request) {
         try {
-            emailUtil.sendMessage(request.getEmail());
+            emailUtil.sendCodeMessage(request.getEmail());
         } catch (Exception e) {
             throw new EmailException(ErrorStatus.FAIL_SEND_EMAIL);
         }
@@ -46,7 +46,11 @@ public class EmailCommandServiceImpl implements EmailCommandService {
     }
 
     @Override
-    public void sendImageToEmail(EmailImageSendRequest request) {
-        // TODO 로직
+    public void sendImageToEmail(MultipartFile file, String email) {
+        try {
+            emailUtil.sendImageMessage(email, file);
+        } catch (Exception e) {
+            throw new EmailException(ErrorStatus.FAIL_SEND_EMAIL);
+        }
     }
 }
