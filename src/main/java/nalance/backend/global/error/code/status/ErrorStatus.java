@@ -29,6 +29,13 @@ public enum ErrorStatus implements BaseErrorCode {
     INCORRECT_EMAIL_CODE(HttpStatus.BAD_REQUEST, "EMAIL4003", "인증번호가 일치하지 않습니다."),
     INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, "EMAIL4004", "인증번호 형식이 올바르지 않습니다."),
 
+    // 파일 관련 에러
+    INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "FILE4001", "파일 형식이 올바르지 않습니다."),
+    NOT_UPLOAD_FILE(HttpStatus.BAD_REQUEST, "FILE4002", "파일이 업로드되지 않았습니다."),
+    TOO_BIG_SIZE_FILE(HttpStatus.BAD_REQUEST, "FILE4003", "파일 크기는 5MB를 초과할 수 없습니다."),
+    INVALID_MIME_TYPE(HttpStatus.BAD_REQUEST, "FILE4004", "허용되지 않는 MIME 형식입니다. (허용 형식: image/jpeg, image/png)"),
+    INVALID_FILE_NAME(HttpStatus.BAD_REQUEST, "FILE4005", "잘못된 파일 이름입니다."),
+
     // Member 관련 에러
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "해당 멤버가 존재하지 않습니다."),
     FAIL_JOIN_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4002", "회원 가입에 실패했습니다."),
