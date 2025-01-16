@@ -48,7 +48,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Terms 관련 에러
     FAIL_GET_TERMS(HttpStatus.BAD_REQUEST, "TERMS4001", "약관 목록 조회에 실패했습니다."),
-    FAIl_GET_TERMS_DETAIL(HttpStatus.BAD_REQUEST, "TERMS4002", "개별 약관 조회에 실패했습니다."),
+    INVALID_TERMS_ID(HttpStatus.BAD_REQUEST, "TERMS4002", "잘못된 형식의 약관 ID 입니다."),
     NOT_FOUND_TERMS(HttpStatus.NOT_FOUND, "TERMS4003", "해당 약관이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
