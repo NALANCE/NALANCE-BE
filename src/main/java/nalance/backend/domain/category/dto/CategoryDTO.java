@@ -1,17 +1,20 @@
 package nalance.backend.domain.category.dto;
 
 import lombok.*;
+import nalance.backend.global.validation.annotation.ExistCategoryColors;
 
 public class CategoryDTO {
     @Getter
     public static class CategoryRequest {
         String categoryName;
+        @ExistCategoryColors
         String color;
     }
     @Getter
     public static class CategoryUpdateRequest {
         Long categoryId;
         String categoryName;
+        @ExistCategoryColors
         String color;
     }
     @Builder
