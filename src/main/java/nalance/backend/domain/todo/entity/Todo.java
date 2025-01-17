@@ -41,7 +41,7 @@ public class Todo extends BaseEntity {
     private String todoName;
 
     @Column(nullable = false)
-    private int duration;
+    private Integer duration;
 
     @Column(nullable = false)
     private LocalDate date;
@@ -49,4 +49,5 @@ public class Todo extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
 }
