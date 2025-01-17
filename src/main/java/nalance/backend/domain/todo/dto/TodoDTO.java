@@ -15,15 +15,15 @@ public class TodoDTO {
         public static class TodoCreateRequest {
             private Long categoryId;
             private String todoName;
-            private int duration;
+            private Integer duration;
             private LocalDate date;
-            private Status status;
+            private Integer status;
         }
 
         @Getter
         public static class TodoUpdateRequest {
             private String todoName;
-            private int duration;
+            private Integer duration;
             private LocalDate date;
         }
 
@@ -31,7 +31,7 @@ public class TodoDTO {
         public static class TodoQueryRequest {
             private List<LocalDate> dateList;
             private List<Long> categoryIdList;
-            private Status status;
+            private Integer status;
         }
 
     }
@@ -57,7 +57,7 @@ public class TodoDTO {
         @AllArgsConstructor(access = AccessLevel.PROTECTED)
         public static class TodoPreviewResponse {
             private String todoName;
-            private int duration;
+            private Integer duration;
             private LocalDate date;
             private Status status;
         }
