@@ -58,6 +58,11 @@ jobs:
           RDS_HOST: ${{ secrets.RDS_HOST }}
           RDS_DB_NAME: ${{ secrets.RDS_DB_NAME }}
           DISCORD_URL: ${{ secrets.DISCORD_URL }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
           echo "$EC2_SSH_KEY" > private_key.pem
           chmod 600 private_key.pem
@@ -73,6 +78,11 @@ jobs:
               -DDB_USERNAME=$RDS_USERNAME \
               -DDB_PASSWORD=$RDS_PASSWORD \
               -DDISCORD_URL=$DISCORD_URL \
+              -DREDIS_HOST=$REDIS_HOST \
+              -DREDIS_PORT=$REDIS_PORT \
+              -DREDIS_PASSWORD=$REDIS_PASSWORD \
+              -DEMAIL_USERNAME=$EMAIL_USERNAME \
+              -DEMAIL_PASSWORD=$EMAIL_PASSWORD \
               -jar /home/$EC2_USERNAME/umc7thServer.jar > app.log 2>&1 &  # 새 버전 애플리케이션 실행
           "
           rm -f private_key.pem  # 민감한 정보 삭제
