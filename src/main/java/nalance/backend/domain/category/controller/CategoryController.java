@@ -3,12 +3,14 @@ package nalance.backend.domain.category.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.category.dto.CategoryDTO;
 import nalance.backend.domain.category.entity.Category;
 import nalance.backend.domain.category.service.CategoryCommandService;
 import nalance.backend.domain.category.service.CategoryQueryService;
 import nalance.backend.global.error.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -34,10 +36,14 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4002", description = "카테고리 생성에 실패했습니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4003", description = "카테고리명은 필수입니다."),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4004", description = "카테고리 색상은 필수 입니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4004", description = "카테고리 색상은 필수 입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4005", description = "해당 카테고리명은 이미 존재합니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4006", description = "해당 색상은 이미 존재합니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
+
     })
-    public ApiResponse<?> createOneCategory(@RequestBody CategoryDTO.CategoryRequest categoryRequest){
-        categoryCommandService.createOneCateory(categoryRequest);
+    public ApiResponse<?> createOneCategory(@RequestParam Long memberId, @RequestBody @Valid CategoryDTO.CategoryRequest categoryRequest){
+        categoryCommandService.createOneCateory(memberId, categoryRequest);
         return ApiResponse.onSuccess("카테고리가 생성되었습니다.");
     }
 
@@ -53,10 +59,13 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4002", description = "카테고리 생성에 실패했습니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4003", description = "카테고리명은 필수입니다."),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4004", description = "카테고리 색상은 필수 입니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4004", description = "카테고리 색상은 필수 입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4005", description = "해당 카테고리명은 이미 존재합니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4006", description = "해당 색상은 이미 존재합니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
     })
-    public ApiResponse<?> createManyCategory(@RequestBody List<CategoryDTO.CategoryRequest> categoryRequest){
-        categoryCommandService.createManyCateory(categoryRequest);
+    public ApiResponse<?> createManyCategory(@RequestParam Long memberId, @RequestBody @Valid List<CategoryDTO.CategoryRequest> categoryRequest){
+        categoryCommandService.createManyCateory(memberId, categoryRequest);
         return ApiResponse.onSuccess("카테고리가 생성되었습니다.");
     }
 
@@ -83,11 +92,14 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "카테고리 수정 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4002", description = "카테고리를 찾을 수 없음"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4003", description = "카테고리명은 필수입니다."),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4004", description = "카테고리 색상은 필수 입니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4004", description = "카테고리 색상은 필수 입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4005", description = "해당 카테고리명은 이미 존재합니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4006", description = "해당 색상은 이미 존재합니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
     })
     public ApiResponse<?> updateCategory(
             @RequestParam Long memberId,
-            @RequestBody CategoryDTO.CategoryUpdateRequest categoryUpdateRequest) {
+            @RequestBody @Valid CategoryDTO.CategoryUpdateRequest categoryUpdateRequest) {
         categoryCommandService.updateCategory(memberId, categoryUpdateRequest);
         return ApiResponse.onSuccess("카테고리가 수정되었습니다.");
     }

@@ -9,11 +9,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.member.service.EmailCommandService;
 import nalance.backend.global.error.ApiResponse;
+import nalance.backend.global.validation.annotation.CheckFile;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,19 +53,28 @@ public class EmailController {
         return ApiResponse.onSuccess("코드 인증 성공");
     }
 
-    @PostMapping("/picture/send-screenshot")
+    @PostMapping(value = "/picture/send-screenshot", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "캡쳐한 사진을 유저의 이메일로 보내는 API", description = """
-        캡쳐한 사진을 유저의 이메일로 보내는 API입니다.
-        
-        유저의 토큰을 헤더로 주세요. (구현에 따라 변경 가능성O)
-        """)
+            캡쳐한 사진을 유저의 이메일로 보내는 API입니다.
+                    
+            현재는 email을 파라미터로 받지만 jwt token이 완료되면 email 대신 token을 받을 예정입니다.
+            따라서 email validation 처리는 따로 하지 않았습니다.
+                     
+            파일 확장자는 jpg, jpeg, png를 허용합니다. 또한 파일 크기는 5MB 이내로 제한합니다. (5MB ~ 10MB에서만 커스텀 에러 리턴)
+            """)
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EMAIL4001", description = "이메일 전송에 실패했습니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EMAIL4001", description = "이메일 전송에 실패했습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4001", description = "파일 형식이 올바르지 않습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4002", description = "파일이 업로드되지 않았습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4003", description = "파일 크기는 5MB를 초과할 수 없습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4004", description = "허용되지 않는 MIME 형식입니다. (허용 형식: image/jpeg, image/png)"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4005", description = "잘못된 파일 이름입니다.")
     })
-    public ApiResponse<String> sendImageToEmail(@RequestBody @Valid EmailImageSendRequest emailImageSendRequest) {
-        // TODO 헤더 토큰 받기
-        emailCommandService.sendImageToEmail(emailImageSendRequest);
+    public ApiResponse<String> sendImageToEmail(@RequestParam("email") String email,
+                                                @RequestParam("file") @CheckFile MultipartFile file) {
+        // TODO 헤더 토큰 받기, 토큰으로 유저의 email 받아내기
+        emailCommandService.sendImageToEmail(file, email);
         return ApiResponse.onSuccess("사진 전송 성공");
     }
 }

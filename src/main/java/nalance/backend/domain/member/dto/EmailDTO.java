@@ -24,12 +24,6 @@ public class EmailDTO {
             @CheckEmailCode
             private String code;
         }
-
-        @Getter
-        public static class EmailImageSendRequest {
-            // TODO validation
-            private String imageUrl;
-        }
     }
 
 }

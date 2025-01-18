@@ -18,5 +18,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     // 특정 멤버의 카테고리 존재 여부 확인
     boolean existsByCategoryIdAndMember_MemberId(Long categoryId, Long memberId);
 
+    Optional<Category> findByCategoryName(String categoryName);
+
 }
 
