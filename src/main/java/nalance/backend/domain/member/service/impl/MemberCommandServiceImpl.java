@@ -12,6 +12,7 @@ import nalance.backend.domain.terms.repository.MemberAgreeRepository;
 import nalance.backend.domain.terms.repository.TermsRepository;
 import nalance.backend.global.jwt.TokenDTO;
 import nalance.backend.global.jwt.TokenProvider;
+import nalance.backend.global.security.SecurityUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -92,17 +93,47 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     public void updateEmail(MemberDTO.MemberRequest.MemberEmailUpdateRequest request) {
-        // 작성 x
+        // 1. 현재 로그인된 회원의 ID 가져오기
+        Long memberId = SecurityUtil.getCurrentMemberId();
+
+        // 2. 회원 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+        // 3. 이메일 변경
+        member.updateEmail(request.getEmail());
     }
 
     @Override
     public void updatePassword(MemberDTO.MemberRequest.MemberPasswordUpdateRequest request) {
-        // 작성 x
+        // 1. 비밀번호와 확인 비밀번호가 일치하는지 확인
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 2. 현재 로그인된 회원의 ID 가져오기
+        Long memberId = SecurityUtil.getCurrentMemberId();
+
+        // 3. 회원 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+        // 4. 비밀번호 암호화 후 변경
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        member.updatePassword(encodedPassword);
     }
 
     @Override
     public void deleteMember() {
-        // 작성 x
+        // 1. 현재 로그인된 회원의 ID 가져오기
+        Long memberId = SecurityUtil.getCurrentMemberId();
+
+        // 2. 회원 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+        // 3. 활성화 상태 변경
+        member.deactivate();
     }
 
 

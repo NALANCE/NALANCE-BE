@@ -40,4 +40,22 @@ public class Member extends BaseEntity {
     public void encodePassword(String password) {
         this.password = password;
     }
+
+    public void updateEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("이메일은 비어 있을 수 없습니다.");
+        }
+        this.email = email;
+    }
+
+    public void updatePassword(String encodedPassword) {
+        if (encodedPassword == null || encodedPassword.isBlank()) {
+            throw new IllegalArgumentException("비밀번호는 비어 있을 수 없습니다.");
+        }
+        this.password = encodedPassword;
+    }
+
+    public void deactivate() {
+        this.isActivated = false;
+    }
 }
