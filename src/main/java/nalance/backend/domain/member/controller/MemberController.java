@@ -41,7 +41,7 @@ public class MemberController {
     @PostMapping("/login")
     @Operation(
             summary = "로그인, 토큰 발급 API",
-            description = "회원 로그인을 처리하고 JWT 토큰을 발급하는 API입니다.",
+            description = "회원 로그인을 처리하고 JWT 토큰을 발급하는 API입니다. 생성된 accessToken으로 swagger에서 Authorize할 수 있습니다.",
             security = @SecurityRequirement(name = "JWT TOKEN")
     )
     @ApiResponses({
