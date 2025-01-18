@@ -48,6 +48,8 @@ public enum ErrorStatus implements BaseErrorCode {
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "MEMBER4005", "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
     FAIL_UPDATE_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4006", "비밀번호 변경에 실패했습니다."),
     FAIL_DELETE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4007", "회원 탈퇴에 실패했습니다."),
+    INVALID_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4008","아이디가 비어있습니다."),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4009","비밀번호가 비어있습니다."),
 
 
     // Graph 관련 에러
