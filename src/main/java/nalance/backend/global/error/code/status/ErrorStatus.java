@@ -48,6 +48,11 @@ public enum ErrorStatus implements BaseErrorCode {
     FAIL_UPDATE_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4006", "비밀번호 변경에 실패했습니다."),
     FAIL_DELETE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4007", "회원 탈퇴에 실패했습니다."),
 
+
+    // Graph 관련 에러
+    FAIL_TO_RETRIEVE_GRAPH_DATA(HttpStatus.BAD_REQUEST, "GRAPH4001", "그래프 데이터를 조회할 수 없습니다."),
+    FAIL_TO_PROCESS_GRAPH_DATA(HttpStatus.BAD_REQUEST, "GRAPH4002", "그래프 데이터를 처리 중 오류가 발생했습니다."),
+
     // Todo 관련 에러
     TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "TODO4001", "해당 Todo가 존재하지 않습니다."),
     FAIL_CREATE_TODO(HttpStatus.BAD_REQUEST, "TODO4002", "Todo 생성에 실패했습니다."),
@@ -60,6 +65,7 @@ public enum ErrorStatus implements BaseErrorCode {
     FAIL_GET_TERMS(HttpStatus.BAD_REQUEST, "TERMS4001", "약관 목록 조회에 실패했습니다."),
     INVALID_TERMS_ID(HttpStatus.BAD_REQUEST, "TERMS4002", "잘못된 형식의 약관 ID 입니다."),
     NOT_FOUND_TERMS(HttpStatus.NOT_FOUND, "TERMS4003", "해당 약관이 존재하지 않습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;
