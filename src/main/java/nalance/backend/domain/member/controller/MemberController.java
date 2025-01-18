@@ -12,6 +12,7 @@ import nalance.backend.domain.member.service.EmailCommandService;
 import nalance.backend.domain.member.service.MemberCommandService;
 import nalance.backend.domain.member.service.MemberQueryService;
 import nalance.backend.global.error.ApiResponse;
+import nalance.backend.global.jwt.TokenDTO;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class MemberController {
     private final MemberCommandService memberCommandService;
     private final MemberQueryService memberQueryService;
 
-    @PostMapping("/")
+    @PostMapping
     @Operation(summary = "회원가입 API", description = "회원가입 및 약관 동의를 처리하는 API입니다. 회원 정보와 동의한 약관의 ID 목록이 포함됩니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
@@ -45,8 +46,8 @@ public class MemberController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "아이디와 비밀번호가 일치하지 않습니다."),
     })
-    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = memberCommandService.login(loginRequest);
+    public ApiResponse<TokenDTO> login(@RequestBody LoginRequest loginRequest) {
+        TokenDTO loginResponse = memberCommandService.login(loginRequest);
         return ApiResponse.onSuccess(loginResponse);
     }
 
@@ -96,7 +97,7 @@ public class MemberController {
         return ApiResponse.onSuccess("회원 탈퇴 성공");
     }
 
-    @GetMapping("/")
+    @GetMapping("me")
     @Operation(
             summary = "회원 정보 조회 API",
             description = "로그인된 회원이 자신의 정보를 조회할 수 있는 API입니다.",

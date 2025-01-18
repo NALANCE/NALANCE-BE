@@ -1,5 +1,6 @@
 package nalance.backend.global.security;
 
+import nalance.backend.global.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,6 +18,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig implements WebMvcConfigurer {
+
+    private final JwtFilter jwtFilter;
+
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,6 +38,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 new AntPathRequestMatcher("/api/v0/emails/verification"),
                                 new AntPathRequestMatcher("/api/v0/emails/send-verification"),
                                 new AntPathRequestMatcher("/api/v0/members"),
+                                new AntPathRequestMatcher("/api/v0/members/login"),
                                 new AntPathRequestMatcher("/api/v0/categories/**"),
                                 new AntPathRequestMatcher("/api/v0/members/{memberId}/categories"),
                                 new AntPathRequestMatcher("/api/v0/terms/**"),
@@ -42,6 +51,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 new AntPathRequestMatcher("/health")
                         ).permitAll()
                         .anyRequest().authenticated())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 ;
         return http.build();
     }

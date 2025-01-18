@@ -2,6 +2,7 @@ package nalance.backend.domain.member.dto;
 
 import lombok.*;
 import nalance.backend.domain.terms.dto.MemberAgreeDTO;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.List;
 
@@ -20,6 +21,10 @@ public class MemberDTO {
         public static class LoginRequest {
             private String email;
             private String password;
+
+            public UsernamePasswordAuthenticationToken toAuthentication() {
+                return new UsernamePasswordAuthenticationToken(email, password);
+            }
         }
 
         @Getter
