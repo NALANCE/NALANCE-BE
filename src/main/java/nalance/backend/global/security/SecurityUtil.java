@@ -21,4 +21,6 @@ public class SecurityUtil {
             throw new RuntimeException("Member ID가 올바르지 않은 형식입니다.");
         }
     }
+
+
 }

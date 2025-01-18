@@ -6,6 +6,7 @@ import nalance.backend.domain.member.entity.Member;
 import nalance.backend.domain.member.repository.MemberRepository;
 import nalance.backend.domain.member.service.MemberQueryService;
 import nalance.backend.global.error.code.status.ErrorStatus;
+import nalance.backend.global.error.handler.MemberException;
 import nalance.backend.global.error.handler.TermsException;
 import nalance.backend.global.security.SecurityUtil;
 import org.springframework.security.core.Authentication;
@@ -23,23 +24,11 @@ public class MemberQueryServiceImpl implements MemberQueryService {
     public MemberDTO.MemberResponse.MemberProfileResponse getMemberProfile() {
         Long memberId = SecurityUtil.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new TermsException(ErrorStatus.NOT_FOUND_TERMS));
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
         return MemberDTO.MemberResponse.MemberProfileResponse.builder()
                 .memberId(member.getMemberId())
                 .email(member.getEmail())
                 .isActivated(member.getIsActivated())
                 .build();
     }
-
-//    @Override
-//    public Long getMemberIdFromSecurityContext() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String username = authentication.getName(); // 이메일 또는 username 가져오기
-//
-//        // 데이터베이스에서 사용자 조회
-//        Member member = memberRepository.findByEmail(username)
-//                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-//
-//        return member.getMemberId(); // 사용자 ID 반환
-//    }
 }

@@ -31,6 +31,7 @@ public enum ErrorStatus implements BaseErrorCode {
     NOT_FOUND_EMAIL_CODE(HttpStatus.NOT_FOUND, "EMAIL4002", "해당 이메일로 전송된 코드가 없습니다."),
     INCORRECT_EMAIL_CODE(HttpStatus.BAD_REQUEST, "EMAIL4003", "인증번호가 일치하지 않습니다."),
     INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, "EMAIL4004", "인증번호 형식이 올바르지 않습니다."),
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "EMAIL4005", "이미 존재하는 이메일입니다."),
 
     // 파일 관련 에러
     INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "FILE4001", "파일 형식이 올바르지 않습니다."),
@@ -40,11 +41,11 @@ public enum ErrorStatus implements BaseErrorCode {
     INVALID_FILE_NAME(HttpStatus.BAD_REQUEST, "FILE4005", "잘못된 파일 이름입니다."),
 
     // Member 관련 에러
-    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "해당 멤버가 존재하지 않습니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "해당 멤버가 존재하지 않습니다."),
     FAIL_JOIN_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4002", "회원 가입에 실패했습니다."),
-    INCORRECT_EMAIL_PASSWORD(HttpStatus.BAD_REQUEST,"MEMBER4003", "아이디와 비밀번호가 일치하지 않습니다."),
+    INVALID_LOGIN_CREDENTIALS(HttpStatus.BAD_REQUEST,"MEMBER4003", "아이디와 비밀번호가 일치하지 않습니다."),
     FAIL_UPDATE_ID(HttpStatus.BAD_REQUEST, "MEMBER4004", "아이디 변경에 실패했습니다."),
-    INCORRECT_PASSWORD_CODE(HttpStatus.BAD_REQUEST, "MEMBER4005", "비밀 번호 확인이 일치하지 않습니다."),
+    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "MEMBER4005", "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
     FAIL_UPDATE_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4006", "비밀번호 변경에 실패했습니다."),
     FAIL_DELETE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4007", "회원 탈퇴에 실패했습니다."),
 
@@ -64,7 +65,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // Terms 관련 에러
     FAIL_GET_TERMS(HttpStatus.BAD_REQUEST, "TERMS4001", "약관 목록 조회에 실패했습니다."),
     INVALID_TERMS_ID(HttpStatus.BAD_REQUEST, "TERMS4002", "잘못된 형식의 약관 ID 입니다."),
-    NOT_FOUND_TERMS(HttpStatus.NOT_FOUND, "TERMS4003", "해당 약관이 존재하지 않습니다.");
+    TERMS_NOT_FOUND(HttpStatus.NOT_FOUND, "TERMS4003", "해당 약관이 존재하지 않습니다.");
 
 
     private final HttpStatus httpStatus;
