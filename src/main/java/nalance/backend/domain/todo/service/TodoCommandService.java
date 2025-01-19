@@ -1,6 +1,7 @@
 package nalance.backend.domain.todo.service;
 
 import nalance.backend.domain.todo.dto.TodoDTO;
+import nalance.backend.domain.todo.entity.Todo;
 
 public interface TodoCommandService {
 
