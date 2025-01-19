@@ -4,7 +4,6 @@ import lombok.*;
 import nalance.backend.global.common.enums.Status;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class TodoDTO {
