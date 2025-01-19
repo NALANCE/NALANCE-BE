@@ -7,11 +7,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.member.service.EmailCommandService;
 import nalance.backend.domain.member.service.MemberCommandService;
 import nalance.backend.domain.member.service.MemberQueryService;
 import nalance.backend.global.error.ApiResponse;
+import nalance.backend.global.jwt.TokenDTO;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +26,14 @@ public class MemberController {
     private final MemberCommandService memberCommandService;
     private final MemberQueryService memberQueryService;
 
-    @PostMapping("/")
-    @Operation(summary = "회원가입 API", description = "회원가입 및 약관 동의를 처리하는 API입니다. 회원 정보와 동의한 약관의 ID 목록이 포함됩니다.")
+    @PostMapping("/signup")
+    @Operation(summary = "회원가입 API", description = "회원가입 및 약관 동의를 처리하는 API입니다. 이메일, 비밀번호와 가입시 동의한 약관의 ID 리스트를 포함해야 합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4002", description = "회원가입에 실패했습니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4002", description = "회원가입에 실패했습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EMAIL4005", description = "이미 존재하는 이메일입니다.")
     })
-    public ApiResponse<String> join(@RequestBody JoinRequest joinRequest) {
+    public ApiResponse<String> join(@RequestBody @Valid JoinRequest joinRequest) {
         memberCommandService.joinMember(joinRequest);
         return ApiResponse.onSuccess("회원가입 성공");
     }
@@ -38,15 +41,15 @@ public class MemberController {
     @PostMapping("/login")
     @Operation(
             summary = "로그인, 토큰 발급 API",
-            description = "회원 로그인을 처리하고 JWT 토큰을 발급하는 API입니다.",
+            description = "회원 로그인을 처리하고 JWT 토큰을 발급하는 API입니다. 생성된 accessToken으로 swagger에서 Authorize할 수 있습니다.",
             security = @SecurityRequirement(name = "JWT TOKEN")
     )
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "아이디와 비밀번호가 일치하지 않습니다."),
     })
-    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = memberCommandService.login(loginRequest);
+    public ApiResponse<TokenDTO> login(@RequestBody @Valid LoginRequest loginRequest) {
+        TokenDTO loginResponse = memberCommandService.login(loginRequest);
         return ApiResponse.onSuccess(loginResponse);
     }
 
@@ -60,7 +63,7 @@ public class MemberController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4004", description = "아이디 변경에 실패했습니다."),
     })
-    public ApiResponse<String> updateEmail(@RequestBody MemberEmailUpdateRequest request) {
+    public ApiResponse<String> updateEmail(@RequestBody @Valid MemberEmailUpdateRequest request) {
         memberCommandService.updateEmail(request);
         return ApiResponse.onSuccess("이메일 변경 성공");
     }
@@ -73,15 +76,15 @@ public class MemberController {
     )
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4005", description = "변경하려는 비밀번호와 비밀번호 확인이 일치하지 않습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4005", description = "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4006", description = "비밀번호 변경에 실패했습니다.")
     })
-    public ApiResponse<String> updatePassword(@RequestBody MemberPasswordUpdateRequest request) {
+    public ApiResponse<String> updatePassword(@RequestBody @Valid MemberPasswordUpdateRequest request) {
         memberCommandService.updatePassword(request);
         return ApiResponse.onSuccess("비밀번호 변경 성공");
     }
 
-    @PatchMapping("/")
+    @PatchMapping
     @Operation(
             summary = "회원탈퇴 API",
             description = "회원 탈퇴에 사용하는 API입니다.",
@@ -96,7 +99,7 @@ public class MemberController {
         return ApiResponse.onSuccess("회원 탈퇴 성공");
     }
 
-    @GetMapping("/")
+    @GetMapping("me")
     @Operation(
             summary = "회원 정보 조회 API",
             description = "로그인된 회원이 자신의 정보를 조회할 수 있는 API입니다.",

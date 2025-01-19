@@ -5,6 +5,7 @@ spring:
       - discord
       - redis
       - email
+      - jwt
   data:
     redis:
       repositories:

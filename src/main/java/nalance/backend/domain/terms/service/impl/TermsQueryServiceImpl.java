@@ -33,7 +33,7 @@ public class TermsQueryServiceImpl implements TermsQueryService {
     @Override
     public TermsDTO.TermsResponse.TermsDetailResponse getTermsById(Long termsId) {
         Terms terms = termsRepository.findById(termsId)
-                .orElseThrow(() -> new TermsException(ErrorStatus.NOT_FOUND_TERMS));
+                .orElseThrow(() -> new TermsException(ErrorStatus.TERMS_NOT_FOUND));
         return TermsDTO.TermsResponse.TermsDetailResponse.builder()
                 .termsId(terms.getTermsId())
                 .content(terms.getContent())

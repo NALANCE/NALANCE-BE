@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import nalance.backend.domain.terms.entity.MemberAgree;
 import nalance.backend.global.common.BaseEntity;
+import nalance.backend.global.error.code.status.ErrorStatus;
+import nalance.backend.global.error.handler.MemberException;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -39,5 +41,23 @@ public class Member extends BaseEntity {
 
     public void encodePassword(String password) {
         this.password = password;
+    }
+
+    public void updateEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new MemberException(ErrorStatus.INVALID_EMAIL);
+        }
+        this.email = email;
+    }
+
+    public void updatePassword(String encodedPassword) {
+        if (encodedPassword == null || encodedPassword.isBlank()) {
+            throw new MemberException(ErrorStatus.INVALID_PASSWORD);
+        }
+        this.password = encodedPassword;
+    }
+
+    public void deactivate() {
+        this.isActivated = false;
     }
 }
