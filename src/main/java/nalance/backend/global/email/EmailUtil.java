@@ -5,13 +5,25 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.security.SecureRandom;
+import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import nalance.backend.global.error.code.status.ErrorStatus;
 import nalance.backend.global.error.handler.EmailException;
 import nalance.backend.global.redis.RedisUtil;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +45,7 @@ public class EmailUtil {
         } catch (MailException e) {
             throw new EmailException(ErrorStatus.FAIL_SEND_EMAIL);
         }
-        javaMailSender.send(message);
+        //javaMailSender.send(message);
         redisUtil.saveEmailVerificationCode(email, code);
     }
 
@@ -48,18 +60,59 @@ public class EmailUtil {
     }
 
     private MimeMessage createCodeMessage(String email, String code) throws Exception {
+        byte[] imageWithCode = createImageWithCode(code);
+
         MimeMessage message = javaMailSender.createMimeMessage();
-        InternetAddress[] recipients = {new InternetAddress(email)};
-        message.setSubject("NALANCE 회원가입 인증 코드입니다.");
-        message.setRecipients(Message.RecipientType.TO, recipients);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        String msg = code; // TODO 이메일 보내는거 형식 있는지
+        helper.setTo(email);
+        helper.setSubject("NALANCE 회원가입 인증 코드입니다.");
+        helper.setFrom(new InternetAddress("${spring.mail.username}", "NALANCE"));
 
-        message.setContent(msg, "text/html; charset=utf-8");
-        message.setFrom(new InternetAddress("${spring.mail.username}", "NALANCE"));
+        String htmlContent = "<img src='cid:verificationImage' style='display: block; margin: 0 auto; width: 600px; height: auto;' alt='Verification Code Image'>";
+        helper.setText(htmlContent, true);
+
+        helper.addInline("verificationImage", new ByteArrayResource(imageWithCode), "image/png");
 
         return message;
     }
+
+    private byte[] createImageWithCode(String code) throws IOException {
+        String imageUrl = "https://github.com/user-attachments/assets/29691422-d761-40f1-ba8f-c0a222599d5b";
+        BufferedImage originalImage;
+
+        // 이미지 로드
+        try (InputStream inputStream = new URL(imageUrl).openStream()) {
+            originalImage = ImageIO.read(inputStream);
+        }
+
+        // 새로운 이미지 생성
+        int width = originalImage.getWidth();
+        int height = originalImage.getHeight();
+        BufferedImage imageWithCode = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D graphics = imageWithCode.createGraphics();
+        graphics.drawImage(originalImage, 0, 0, null);
+        graphics.setColor(Color.BLACK); // 텍스트 색상
+        graphics.setFont(new Font("Arial", Font.BOLD, 40));
+
+        // 텍스트를 이미지에 배치
+        FontMetrics fontMetrics = graphics.getFontMetrics();
+        int textWidth = fontMetrics.stringWidth(code);
+        int textHeight = fontMetrics.getHeight();
+        int x = (width - textWidth) / 2 - 60;
+        int y = (height - textHeight) / 2 + fontMetrics.getAscent();
+        graphics.drawString(code, x, y);
+
+        graphics.dispose();
+
+        // 이미지를 바이트 배열로 변환
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ImageIO.write(imageWithCode, "png", outputStream);
+
+        return outputStream.toByteArray();
+    }
+
 
     public void sendImageMessage(String email, MultipartFile file) throws Exception {
         MimeMessage message = createImageMessage(email, file);
