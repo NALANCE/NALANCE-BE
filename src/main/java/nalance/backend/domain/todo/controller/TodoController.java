@@ -10,12 +10,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import nalance.backend.domain.todo.converter.TodoConverter;
+import nalance.backend.domain.todo.entity.Todo;
 import nalance.backend.domain.todo.service.TodoCommandService;
 import nalance.backend.domain.todo.service.TodoQueryService;
 import nalance.backend.global.error.ApiResponse;
 import nalance.backend.global.validation.annotation.CheckPage;
 import nalance.backend.global.validation.annotation.ExistTodo;
 import nalance.backend.global.validation.validator.CheckPageValidator;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +34,18 @@ public class TodoController {
     private final CheckPageValidator checkPageValidator;
 
     @PostMapping("/")
-    @Operation(summary = "Todo 생성 API", description = "Todo를 생성하는 API입니다. 유저의 토큰을 헤더로 주세요.")
+    @Operation(summary = "Todo 생성 API", description = """
+            Todo를 생성하는 API입니다. 유저의 토큰을 헤더로 주세요.
+            
+            status 값은 1 또는 2로 주세요. (1:completed, 2:incomplete)
+            """
+    )
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "TODO4002", description = "TODO 생성에 실패했습니다.")
     })
     public ApiResponse<String> createTodo(@RequestBody @Valid TodoCreateRequest todoCreateRequest) {
-        //헤더 토큰 받기
+        //TODO 헤더 토큰 받기
         todoCommandService.createTodo(todoCreateRequest);
         return ApiResponse.onSuccess("Todo 생성 성공");
     }
@@ -52,7 +60,7 @@ public class TodoController {
             @Parameter(name = "todoId", description = "todo의 아이디, path variable 입니다."),
     })
     public ApiResponse<String> deleteTodo(@ExistTodo @PathVariable(name = "todoId") Long todoId) {
-        //헤더 토큰 받기
+        //TODO 헤더 토큰 받기
         todoCommandService.deleteTodo(todoId);
         return ApiResponse.onSuccess("Todo 삭제 성공");
     }
@@ -83,13 +91,17 @@ public class TodoController {
             @Parameter(name = "todoId", description = "todo의 아이디, path variable 입니다."),
     })
     public ApiResponse<String> completeTodo(@ExistTodo @PathVariable(name = "todoId") Long todoId) {
-        //헤더 토큰 받기
+        //TODO 헤더 토큰 받기
         todoCommandService.completeTodo(todoId);
         return ApiResponse.onSuccess("Todo 완료 성공");
     }
 
     @PatchMapping("/")
-    @Operation(summary = "Todo 조회 API", description = "Todo를 조회하는 API입니다. 유저의 토큰을 헤더로 주세요.")
+    @Operation(summary = "Todo 조회 API", description = """
+            Todo를 생성하는 API입니다. 유저의 토큰을 헤더로 주세요.
+            
+            status 값은 1 또는 2로 주세요. (1:completed, 2:incomplete)
+            """)
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "TODO4006", description = "TODO 조회에 실패했습니다.")
@@ -99,10 +111,10 @@ public class TodoController {
     })
     public ApiResponse<TodoPreviewListResponse> getTodoList(@RequestBody @Valid TodoQueryRequest todoQueryRequest,
                                                             @CheckPage@RequestParam(name = "page") Integer page) {
-        //헤더 토큰 받기
+        //TODO 헤더 토큰 받기
         Integer validatedPage = checkPageValidator.validateAndTransformPage(page);
-        TodoPreviewListResponse todoList = todoQueryService.getTodoList(todoQueryRequest, validatedPage);
-        return ApiResponse.onSuccess(todoList);
+        Page<Todo> todoList = todoQueryService.getTodoList(todoQueryRequest, validatedPage);
+        return ApiResponse.onSuccess(TodoConverter.toTodoPreviewListResponse(todoList));
     }
 
 

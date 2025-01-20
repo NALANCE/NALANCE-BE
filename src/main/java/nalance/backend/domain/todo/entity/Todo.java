@@ -29,6 +29,10 @@ public class Todo extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    public void addCategory(Category category){
+        this.category = category;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -37,7 +41,7 @@ public class Todo extends BaseEntity {
     private String todoName;
 
     @Column(nullable = false)
-    private int duration;
+    private Integer duration;
 
     @Column(nullable = false)
     private LocalDate date;
@@ -45,4 +49,17 @@ public class Todo extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+    public void updateTodo(String todoName, Integer duration, LocalDate date){
+        if(todoName != null && !todoName.isBlank())
+            this.todoName = todoName;
+        if(duration != null)
+            this.duration = duration;
+        if(date != null)
+            this.date = date;
+    }
+
+    public void completeTodo(){
+        this.status = Status.COMPLETED;
+    }
 }

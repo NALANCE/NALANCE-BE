@@ -3,7 +3,7 @@ package nalance.backend.domain.todo.dto;
 import lombok.*;
 import nalance.backend.global.common.enums.Status;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class TodoDTO {
@@ -14,23 +14,23 @@ public class TodoDTO {
         public static class TodoCreateRequest {
             private Long categoryId;
             private String todoName;
-            private int duration;
-            private LocalDateTime date;
-            private Status status;
+            private Integer duration;
+            private LocalDate date;
+            private Integer status;
         }
 
         @Getter
         public static class TodoUpdateRequest {
             private String todoName;
-            private int duration;
-            private LocalDateTime date;
+            private Integer duration;
+            private LocalDate date;
         }
 
         @Getter
         public static class TodoQueryRequest {
-            private List<LocalDateTime> dateList;
+            private List<LocalDate> dateList;
             private List<Long> categoryIdList;
-            private Status status;
+            private Integer status;
         }
 
     }
@@ -56,8 +56,8 @@ public class TodoDTO {
         @AllArgsConstructor(access = AccessLevel.PROTECTED)
         public static class TodoPreviewResponse {
             private String todoName;
-            private int duration;
-            private LocalDateTime date;
+            private Integer duration;
+            private LocalDate date;
             private Status status;
         }
     }
