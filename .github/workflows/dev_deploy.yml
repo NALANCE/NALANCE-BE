@@ -67,13 +67,27 @@ jobs:
         run: |
           echo "$EC2_SSH_KEY" > private_key.pem
           chmod 600 private_key.pem
-        
+          
+          # 기존 JAR 파일과 해시 비교
           jar_file=$(find build/libs -name '*.jar' ! -name '*plain.jar' | head -n 1)
-          scp -i private_key.pem -o StrictHostKeyChecking=no "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/umc7thServer.jar
+          local_hash=$(sha256sum "$jar_file" | cut -d ' ' -f 1)
+          remote_hash=$(ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "sha256sum /home/$EC2_USERNAME/umc7thServer.jar 2>/dev/null | cut -d ' ' -f 1" || echo "none")
+
+          if [ "$local_hash" != "$remote_hash" ]; then
+            echo "Uploading new JAR file to EC2..."
+            rsync -avz -e "ssh -i private_key.pem -o StrictHostKeyChecking=no" "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/umc7thServer.jar
+          else
+            echo "JAR file is unchanged. Skipping upload."
+          fi
           
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
-            pgrep java | xargs -r kill -15  # 기존에 실행 중인 Java 프로세스 종료
-            sleep 10
+            # 기존 프로세스 종료
+            if pgrep -f 'umc7thServer.jar'; then
+              pgrep -f 'umc7thServer.jar' | xargs -r kill -15
+              sleep 10
+            fi
+          
+          
             nohup java -Dspring.profiles.active=dev \
               -DDB_URL=jdbc:mysql://${RDS_HOST}:3306/${RDS_DB_NAME} \
               -DDB_USERNAME=$RDS_USERNAME \
