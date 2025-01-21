@@ -73,20 +73,17 @@ jobs:
           local_hash=$(sha256sum "$jar_file" | cut -d ' ' -f 1)
           remote_hash=$(ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "sha256sum /home/$EC2_USERNAME/umc7thServer.jar 2>/dev/null | cut -d ' ' -f 1" || echo "none")
 
-          if [ "$local_hash" != "$remote_hash" ]; then
+          if [ "$remote_hash" = "none" ] || [ "$local_hash" != "$remote_hash" ]; then
             echo "Uploading new JAR file to EC2..."
-            rsync -avz -e "ssh -i private_key.pem -o StrictHostKeyChecking=no" "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/umc7thServer.jar
+            rsync -avz --progress -e "ssh -i private_key.pem -o StrictHostKeyChecking=no" "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/umc7thServer.jar
           else
             echo "JAR file is unchanged. Skipping upload."
           fi
           
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
             # 기존 프로세스 종료
-            if pgrep -f 'umc7thServer.jar'; then
-              pgrep -f 'umc7thServer.jar' | xargs -r kill -15
-              sleep 10
-            fi
-          
+            pgrep java | xargs -r kill -15
+            sleep 10
           
             nohup java -Dspring.profiles.active=dev \
               -DDB_URL=jdbc:mysql://${RDS_HOST}:3306/${RDS_DB_NAME} \
