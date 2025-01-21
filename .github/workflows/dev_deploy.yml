@@ -80,7 +80,7 @@ jobs:
             echo "JAR file is unchanged. Skipping upload."
           fi
           
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "chmod +x /home/$EC2_USERNAME/umc7thServer.jar"
             # 기존 프로세스 종료
             if pgrep -f 'umc7thServer.jar'; then
               pgrep -f 'umc7thServer.jar' | xargs -r kill -15
