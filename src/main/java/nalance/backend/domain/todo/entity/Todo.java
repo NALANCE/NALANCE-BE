@@ -37,6 +37,10 @@ public class Todo extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    public void addMember(Member member){
+        this.member = member;
+    }
+
     @Column(nullable = false)
     private String todoName;
 

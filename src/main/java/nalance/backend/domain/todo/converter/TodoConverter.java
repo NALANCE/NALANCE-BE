@@ -1,5 +1,6 @@
 package nalance.backend.domain.todo.converter;
 
+import nalance.backend.domain.member.entity.Member;
 import nalance.backend.domain.todo.dto.TodoDTO;
 import nalance.backend.domain.todo.entity.Todo;
 import nalance.backend.global.common.enums.Status;
