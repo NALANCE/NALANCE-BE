@@ -41,8 +41,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 new AntPathRequestMatcher("/api/v0/emails/picture/send-screenshot"),
                                 new AntPathRequestMatcher("/api/v0/members/signup"),
                                 new AntPathRequestMatcher("/api/v0/members/login"),
-                                new AntPathRequestMatcher("/api/v0/categories/**"),
-                                new AntPathRequestMatcher("/api/v0/members/{memberId}/categories"),
                                 new AntPathRequestMatcher("/api/v0/terms/**"),
                                 new AntPathRequestMatcher("/swagger-ui.html"),
                                 new AntPathRequestMatcher("/swagger-ui/**"),
