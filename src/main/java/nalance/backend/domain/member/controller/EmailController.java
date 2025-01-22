@@ -57,8 +57,7 @@ public class EmailController {
     @Operation(summary = "캡쳐한 사진을 유저의 이메일로 보내는 API", description = """
             캡쳐한 사진을 유저의 이메일로 보내는 API입니다.
                     
-            현재는 email을 파라미터로 받지만 jwt token이 완료되면 email 대신 token을 받을 예정입니다.
-            따라서 email validation 처리는 따로 하지 않았습니다.
+            token을 필수적으로 넣어주세요.
                      
             파일 확장자는 jpg, jpeg, png를 허용합니다. 또한 파일 크기는 5MB 이내로 제한합니다. (5MB ~ 10MB에서만 커스텀 에러 리턴)
             """)
@@ -69,12 +68,11 @@ public class EmailController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4002", description = "파일이 업로드되지 않았습니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4003", description = "파일 크기는 5MB를 초과할 수 없습니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4004", description = "허용되지 않는 MIME 형식입니다. (허용 형식: image/jpeg, image/png)"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4005", description = "잘못된 파일 이름입니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILE4005", description = "잘못된 파일 이름입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4001", description = "해당 멤버가 존재하지 않습니다.")
     })
-    public ApiResponse<String> sendImageToEmail(@RequestParam("email") String email,
-                                                @RequestParam("file") @CheckFile MultipartFile file) {
-        // TODO 헤더 토큰 받기, 토큰으로 유저의 email 받아내기
-        emailCommandService.sendImageToEmail(file, email);
+    public ApiResponse<String> sendImageToEmail(@RequestParam("file") @CheckFile MultipartFile file) {
+        emailCommandService.sendImageToEmail(file);
         return ApiResponse.onSuccess("사진 전송 성공");
     }
 }
