@@ -83,10 +83,16 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
         Long memberId = SecurityUtil.getCurrentMemberId();
         Category category = categoryRepository.findByCategoryIdAndMember_MemberId(categoryRequest.getCategoryId(), memberId)
                 .orElseThrow(() -> new CategoryException(ErrorStatus.CATEGORY_NOT_FOUND));
-        // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
-        validateCategoryNames(List.of(categoryRequest.getCategoryName()));
-        // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
-        validateCategoryColors(List.of(categoryRequest.getCategoryName()));
+
+        // 변경하려는 이름이 현재 이름과 다를 경우만 검증
+        if (!category.getCategoryName().equals(categoryRequest.getCategoryName())) {
+            validateCategoryNames(List.of(categoryRequest.getCategoryName()));
+        }
+
+        // 변경하려는 색상이 현재 색상과 다를 경우만 검증
+        if (!category.getColor().equals(categoryRequest.getColor())) {
+            validateCategoryColors(List.of(categoryRequest.getColor()));
+        }
 
         category.updateCategoryDetails(categoryRequest.getCategoryName(), categoryRequest.getColor());
         return categoryRepository.save(category);
