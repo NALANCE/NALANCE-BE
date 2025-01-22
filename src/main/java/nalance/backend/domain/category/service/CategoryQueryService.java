@@ -5,5 +5,5 @@ import nalance.backend.domain.category.entity.Category;
 import java.util.List;
 
 public interface CategoryQueryService {
-    public List<Category> getCategoriesByMember(Long memberId);
+    public List<Category> getCategoriesByMember();
 }

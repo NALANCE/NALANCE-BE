@@ -29,7 +29,6 @@ public class CategoryController {
      * 사용자가 초기 카테고리 세팅 이후에 추가할 때 사용
      *
      * */
-    // Todo 로그인 기능 완료 시 , member추가
     @PostMapping("/categories")
     @Operation(summary = "카테고리 생성 API", description = "카테고리 하나 생성하는 API입니다.")
     @ApiResponses({
@@ -42,8 +41,8 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
 
     })
-    public ApiResponse<?> createOneCategory(@RequestParam Long memberId, @RequestBody @Valid CategoryDTO.CategoryRequest categoryRequest){
-        categoryCommandService.createOneCateory(memberId, categoryRequest);
+    public ApiResponse<?> createOneCategory(@RequestBody @Valid CategoryDTO.CategoryRequest categoryRequest){
+        categoryCommandService.createOneCateory(categoryRequest);
         return ApiResponse.onSuccess("카테고리가 생성되었습니다.");
     }
 
@@ -52,7 +51,6 @@ public class CategoryController {
      * 사용자가 초기 카테고리 세팅 때 사용
      *
      * */
-    // Todo 로그인 기능 완료 시 , member추가
     @PostMapping("/categories/all")
     @Operation(summary = "카테고리 여러 개 생성 API", description = "카테고리 여러 개를 생성하는 API입니다.")
     @ApiResponses({
@@ -64,21 +62,20 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4006", description = "해당 색상은 이미 존재합니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
     })
-    public ApiResponse<?> createManyCategory(@RequestParam Long memberId, @RequestBody @Valid List<CategoryDTO.CategoryRequest> categoryRequest){
-        categoryCommandService.createManyCateory(memberId, categoryRequest);
+    public ApiResponse<?> createManyCategory(@RequestBody @Valid List<CategoryDTO.CategoryRequest> categoryRequest){
+        categoryCommandService.createManyCateory(categoryRequest);
         return ApiResponse.onSuccess("카테고리가 생성되었습니다.");
     }
 
     // 특정 멤버의 모든 카테고리 조회
-    // Todo 로그인 기능 완료 시 , 토큰에서 member값 가져옴
-    @GetMapping("/members/{memberId}/categories")
+    @GetMapping("/categories")
     @Operation(summary = "멤버의 카테고리 조회 API", description = "특정 멤버의 모든 카테고리를 조회하는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "카테고리 조회 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4001", description = "멤버를 찾을 수 없음")
     })
-    public ApiResponse<List<CategoryDTO.CategoryResponse>> getCategoriesByMember(@PathVariable Long memberId) {
-        List<Category> categories = categoryQueryService.getCategoriesByMember(memberId);
+    public ApiResponse<List<CategoryDTO.CategoryResponse>> getCategoriesByMember() {
+        List<Category> categories = categoryQueryService.getCategoriesByMember();
         List<CategoryDTO.CategoryResponse> categoryDTOS = categories.stream().map(category ->
                 CategoryDTO.CategoryResponse.createCategory(category.getCategoryName(), category.getColor())).collect(Collectors.toList());
         return ApiResponse.onSuccess(categoryDTOS);
@@ -98,9 +95,8 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
     })
     public ApiResponse<?> updateCategory(
-            @RequestParam Long memberId,
             @RequestBody @Valid CategoryDTO.CategoryUpdateRequest categoryUpdateRequest) {
-        categoryCommandService.updateCategory(memberId, categoryUpdateRequest);
+        categoryCommandService.updateCategory(categoryUpdateRequest);
         return ApiResponse.onSuccess("카테고리가 수정되었습니다.");
     }
 
@@ -112,10 +108,8 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "카테고리 삭제 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4002", description = "카테고리를 찾을 수 없음")
     })
-    public ApiResponse<?> deleteCategory(
-            @RequestParam Long memberId,
-            @PathVariable Long categoryId) {
-        categoryCommandService.deleteCategory(memberId, categoryId);
+    public ApiResponse<?> deleteCategory(@PathVariable Long categoryId) {
+        categoryCommandService.deleteCategory(categoryId);
         return ApiResponse.onSuccess("카테고리가 삭제되었습니다");
     }
 
