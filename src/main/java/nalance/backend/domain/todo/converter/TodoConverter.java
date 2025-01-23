@@ -1,5 +1,6 @@
 package nalance.backend.domain.todo.converter;
 
+import nalance.backend.domain.category.entity.Category;
 import nalance.backend.domain.member.entity.Member;
 import nalance.backend.domain.todo.dto.TodoDTO;
 import nalance.backend.domain.todo.entity.Todo;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class TodoConverter {
 
-    public static Todo toCreateTodo(TodoDTO.TodoRequest.TodoCreateRequest request){
+    public static Todo toCreateTodo(TodoDTO.TodoRequest.TodoCreateRequest request, Member member, Category category){
 
         Status status = toStatus(request.getStatus());
 
@@ -20,6 +21,8 @@ public class TodoConverter {
                 .duration(request.getDuration())
                 .date(request.getDate())
                 .status(status)
+                .member(member)
+                .category(category)
                 .build();
     }
 

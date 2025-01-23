@@ -31,8 +31,6 @@ public class TodoCommandServiceImpl implements TodoCommandService {
     @Override
     public void createTodo(TodoDTO.TodoRequest.TodoCreateRequest request) {
 
-        Todo todo = TodoConverter.toCreateTodo(request);
-
         Long memberId = SecurityUtil.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
@@ -40,8 +38,7 @@ public class TodoCommandServiceImpl implements TodoCommandService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new CategoryException(ErrorStatus.CATEGORY_NOT_FOUND));
 
-        todo.addMember(member);
-        todo.addCategory(category);
+        Todo todo = TodoConverter.toCreateTodo(request, member, category);
         todoRepository.save(todo);
     }
 

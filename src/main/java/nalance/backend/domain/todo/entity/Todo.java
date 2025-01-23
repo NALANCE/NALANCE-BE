@@ -29,17 +29,9 @@ public class Todo extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    public void addCategory(Category category){
-        this.category = category;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-
-    public void addMember(Member member){
-        this.member = member;
-    }
 
     @Column(nullable = false)
     private String todoName;
