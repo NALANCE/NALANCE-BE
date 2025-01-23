@@ -22,7 +22,7 @@ public class GraphController {
     private final GraphService graphService;
 
     @GetMapping("/daily/{date}")
-    @Operation(summary = "일별 그래프 조회 API", description = "특정 날짜의 그래프 데이터를 조회하는 API입니다.")
+    @Operation(summary = "일별 그래프 조회 API", description = "특정 날짜의 그래프 데이터를 조회하는 API입니다.(Bearer Token 인증 필요)")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "GRAPH4001", description = "그래프 데이터를 조회할 수 없습니다.")
@@ -37,7 +37,7 @@ public class GraphController {
     }
 
     @GetMapping("/calendar/monthly/{year}/{month}")
-    @Operation(summary = "월별 캘린더 데이터 조회 API", description = "특정 연도와 월의 캘린더 데이터를 조회하는 API입니다.")
+    @Operation(summary = "월별 캘린더 데이터 조회 API", description = "특정 연도와 월의 캘린더 데이터를 조회하는 API입니다.(Bearer Token 인증 필요)")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "GRAPH4002", description = "캘린더 데이터를 조회할 수 없습니다.")
