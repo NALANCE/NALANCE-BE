@@ -1,5 +1,7 @@
 package nalance.backend.global.jwt;
 
+import nalance.backend.global.jwt.dto.TokenDTO.*;
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -35,7 +37,7 @@ public class TokenProvider {
     }
 
     // 토큰 DTO 생성
-    public TokenDTO generateTokenDto(Authentication authentication) {
+    public TokenResponse generateTokenDto(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -57,7 +59,7 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        return TokenDTO.builder()
+        return TokenResponse.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
@@ -100,9 +102,9 @@ public class TokenProvider {
         return false;
     }
 
-    private Claims parseClaims(String accessToken) {
+    private Claims parseClaims(String token) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }

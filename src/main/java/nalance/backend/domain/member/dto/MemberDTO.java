@@ -26,10 +26,6 @@ public class MemberDTO {
             )
             private String password;
 
-            // 확인 비밀번호는 굳이 필요 없을 것 같아서 일단 추가하지 않았음. 프론트와 상의하여 결정 예정
-//            @NotBlank(message = "비밀번호 확인은 필수 입력 값입니다.")
-//            private String confirmPassword;
-
             // 닉네임은 고려하지 않았음, 추후 수정 가능
             @NotEmpty(message = "약관 동의 항목은 비어 있을 수 없습니다.")
             private List<MemberAgreeDTO.AgreeTermsRequest> terms; //약관 동의 리스트
@@ -77,15 +73,6 @@ public class MemberDTO {
     }
 
     public static class MemberResponse {
-        @Builder
-        @Getter
-        @NoArgsConstructor(access = AccessLevel.PROTECTED)
-        @AllArgsConstructor(access = AccessLevel.PROTECTED)
-        public static class LoginResponse {
-            private String token;
-            private String refreshToken;
-        }
-
         @Builder
         @Getter
         @NoArgsConstructor(access = AccessLevel.PROTECTED)
