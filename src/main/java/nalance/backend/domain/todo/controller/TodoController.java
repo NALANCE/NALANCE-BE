@@ -45,7 +45,6 @@ public class TodoController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "TODO4002", description = "TODO 생성에 실패했습니다.")
     })
     public ApiResponse<String> createTodo(@RequestBody @Valid TodoCreateRequest todoCreateRequest) {
-        //TODO 헤더 토큰 받기
         todoCommandService.createTodo(todoCreateRequest);
         return ApiResponse.onSuccess("Todo 생성 성공");
     }
@@ -60,7 +59,6 @@ public class TodoController {
             @Parameter(name = "todoId", description = "todo의 아이디, path variable 입니다."),
     })
     public ApiResponse<String> deleteTodo(@ExistTodo @PathVariable(name = "todoId") Long todoId) {
-        //TODO 헤더 토큰 받기
         todoCommandService.deleteTodo(todoId);
         return ApiResponse.onSuccess("Todo 삭제 성공");
     }
@@ -91,7 +89,6 @@ public class TodoController {
             @Parameter(name = "todoId", description = "todo의 아이디, path variable 입니다."),
     })
     public ApiResponse<String> completeTodo(@ExistTodo @PathVariable(name = "todoId") Long todoId) {
-        //TODO 헤더 토큰 받기
         todoCommandService.completeTodo(todoId);
         return ApiResponse.onSuccess("Todo 완료 성공");
     }
@@ -111,7 +108,6 @@ public class TodoController {
     })
     public ApiResponse<TodoPreviewListResponse> getTodoList(@RequestBody @Valid TodoQueryRequest todoQueryRequest,
                                                             @CheckPage@RequestParam(name = "page") Integer page) {
-        //TODO 헤더 토큰 받기
         Integer validatedPage = checkPageValidator.validateAndTransformPage(page);
         Page<Todo> todoList = todoQueryService.getTodoList(todoQueryRequest, validatedPage);
         return ApiResponse.onSuccess(TodoConverter.toTodoPreviewListResponse(todoList));
