@@ -76,43 +76,51 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     public TokenResponse login(MemberDTO.MemberRequest.LoginRequest request) {
+        // 1. 로그인 ID/PW를 기반으로 AuthenticationToken 생성
+        UsernamePasswordAuthenticationToken authenticationToken = request.toAuthentication();
+
+        // 2. 실제로 인증 (사용자 비밀번호 체크)
+        Authentication authentication;
         try {
-            // 1. 로그인 ID/PW를 기반으로 AuthenticationToken 생성
-            UsernamePasswordAuthenticationToken authenticationToken = request.toAuthentication();
-
-            // 2. 실제로 인증 (사용자 비밀번호 체크)
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-            // 3. 인증 정보를 기반으로 JWT 토큰 생성
-            TokenResponse tokenDto = tokenProvider.generateTokenDto(authentication);
-
-            RefreshToken refreshToken = RefreshToken.builder()
-                    .key(authentication.getName())
-                    .value(tokenDto.getRefreshToken())
-                    .build();
-
-            refreshTokenRepository.save(refreshToken);
-
-            return tokenDto;
-
+            authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         } catch (Exception e) {
-            throw new MemberException(ErrorStatus.INVALID_LOGIN_CREDENTIALS);
+            throw new MemberException(ErrorStatus.INVALID_LOGIN_CREDENTIALS); // 비밀번호 불일치 또는 인증 실패
         }
+
+        // 3. 인증 정보를 기반으로 Member 조회
+        Member member = memberRepository.findById(Long.parseLong(authentication.getName()))
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // 4. 탈퇴 여부 확인
+        if (!member.getIsActivated()) {
+            throw new MemberException(ErrorStatus.DEACTIVATED_MEMBER); // 탈퇴된 회원
+        }
+
+        // 5. 인증 정보를 기반으로 JWT 토큰 생성
+        TokenResponse tokenDto = tokenProvider.generateTokenDto(authentication);
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .key(authentication.getName())
+                .value(tokenDto.getRefreshToken())
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
+
+        return tokenDto;
     }
 
     @Override
     public TokenResponse reissue(TokenRequest request) {
         if (!tokenProvider.validateToken(request.getRefreshToken())) {
-            throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
+            throw new MemberException(ErrorStatus.INVALID_TOKEN); // 유효하지 않은 refresh token
         }
-
         Authentication authentication = tokenProvider.getAuthentication(request.getAccessToken());
 
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃된 사용자입니다."));
+                .orElseThrow(() -> new MemberException(ErrorStatus.LOGOUT_MEMBER)); // 로그아웃된 멤버
 
         if (!refreshToken.getValue().equals(request.getRefreshToken())) {
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+            throw new MemberException(ErrorStatus.MEMBER_NOT_FOUND); // 토큰의 유저 정보가 일치하지 않음
         }
 
         TokenResponse tokenDto = tokenProvider.generateTokenDto(authentication);
@@ -122,7 +130,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         return tokenDto;
     }
-
 
     @Override
     public void updateEmail(MemberDTO.MemberRequest.MemberEmailUpdateRequest request) {
@@ -158,14 +165,18 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     public void deleteMember() {
-        // 1. 현재 로그인된 회원의 ID 가져오기
-        Long memberId = SecurityUtil.getCurrentMemberId();
+        try {
+            // 1. 현재 로그인된 회원의 ID 가져오기
+            Long memberId = SecurityUtil.getCurrentMemberId();
 
-        // 2. 회원 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+            // 2. 회원 조회
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // 3. 활성화 상태 변경
-        member.deactivate();
+            // 3. 활성화 상태 변경
+            member.deactivate();
+        } catch (Exception e) {
+            throw new MemberException(ErrorStatus.FAIL_DELETE_MEMBER);
+        }
     }
 }
