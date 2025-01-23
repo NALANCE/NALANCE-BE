@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.todo.dto.GraphDTO.GraphResponse.*;
 import nalance.backend.domain.todo.service.GraphService;
 import nalance.backend.global.error.ApiResponse;
+import nalance.backend.global.security.SecurityUtil;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,9 @@ public class GraphController {
     public ApiResponse<GraphDailyResponse> getDailyGraph(
             @Parameter(description = "조회할 날짜 (yyyy-MM-dd 형식)", example = "2025-01-13")
             @PathVariable String date) {
-        var response = graphService.getDailyGraph(date);
+        // 현재 로그인된 회원의 ID 가져오기
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        var response = graphService.getDailyGraph(memberId,date);
         return ApiResponse.onSuccess(response);
     }
 
@@ -42,7 +45,9 @@ public class GraphController {
     public ApiResponse<CalendarMonthlyResponse> getMonthlyCalendar(
             @PathVariable int year,
             @PathVariable int month) {
-        var response = graphService.getMonthlyCalendar(year, month);
+        // 현재 로그인된 회원의 ID 가져오기
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        var response = graphService.getMonthlyCalendar(memberId, year, month);
         return ApiResponse.onSuccess(response);
     }
 }
