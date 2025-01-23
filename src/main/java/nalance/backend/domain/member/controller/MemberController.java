@@ -30,7 +30,6 @@ public class MemberController {
     @Operation(summary = "회원가입 API", description = "회원가입 및 약관 동의를 처리하는 API입니다. 이메일, 비밀번호와 가입시 동의한 약관의 ID 리스트를 포함해야 합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4002", description = "회원가입에 실패했습니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EMAIL4005", description = "이미 존재하는 이메일입니다.")
     })
     public ApiResponse<String> join(@RequestBody @Valid JoinRequest joinRequest) {
@@ -39,14 +38,19 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    @Operation(
-            summary = "로그인, 토큰 발급 API",
-            description = "회원 로그인을 처리하고 JWT 토큰을 발급하는 API입니다. 생성된 accessToken으로 swagger에서 Authorize할 수 있습니다.",
-            security = @SecurityRequirement(name = "JWT TOKEN")
-    )
+    @Operation(summary = "로그인, 토큰 발급 API",
+            description = """
+           회원 로그인을 처리하고 JWT 토큰을 발급하는 API입니다.
+           
+           생성된 accessToken으로 Authorize할 수 있습니다.
+           
+           accessToken 만료 시간은 30분입니다.
+            """,
+            security = @SecurityRequirement(name = "JWT TOKEN"))
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "아이디와 비밀번호가 일치하지 않습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4002", description = "아이디와 비밀번호가 일치하지 않습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "탈퇴한 회원입니다."),
     })
     public ApiResponse<TokenResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
          TokenResponse loginResponse = memberCommandService.login(loginRequest);
@@ -54,14 +58,21 @@ public class MemberController {
     }
 
     @PostMapping("/reissue")
-    @Operation(
-            summary = "accessToken 재발급 API",
-            description = "accessToken 만료시 refreshToken으로 accessToken을 재발급하는 API입니다. accessToken과 refreshToken값이 필요합니다.",
-            security = @SecurityRequirement(name = "JWT TOKEN")
-    )
+    @Operation(summary = "accessToken 재발급 API",
+            description = """
+            accessToken 만료시 refreshToken으로 accessToken을 재발급하는 API입니다.
+            
+            String 타입의 기존 accessToken과 refreshToken 값이 필요합니다.
+            
+            refreshToken 만료 시간은 7일입니다.
+            
+            refreshToken 만료 후에는 재로그인이 필요합니다.
+            """,
+            security = @SecurityRequirement(name = "JWT TOKEN"))
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "아이디와 비밀번호가 일치하지 않습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4004", description = "유효하지 않은 토큰입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4005", description = "로그아웃된 사용자입니다.")
     })
     public ApiResponse<TokenResponse> reissue(@RequestBody TokenRequest request) {
         TokenResponse reissueResponse = memberCommandService.reissue(request);
@@ -76,7 +87,7 @@ public class MemberController {
     )
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4004", description = "아이디 변경에 실패했습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4006", description = "아이디가 비어있습니다."),
     })
     public ApiResponse<String> updateEmail(@RequestBody @Valid MemberEmailUpdateRequest request) {
         memberCommandService.updateEmail(request);
@@ -91,8 +102,8 @@ public class MemberController {
     )
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4005", description = "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4006", description = "비밀번호 변경에 실패했습니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4007", description = "비밀번호가 비어있습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4008", description = "비밀번호와 확인 비밀번호가 일치하지 않습니다.")
     })
     public ApiResponse<String> updatePassword(@RequestBody @Valid MemberPasswordUpdateRequest request) {
         memberCommandService.updatePassword(request);
@@ -102,12 +113,12 @@ public class MemberController {
     @PatchMapping
     @Operation(
             summary = "회원탈퇴 API",
-            description = "회원 탈퇴에 사용하는 API입니다.",
+            description = "회원 탈퇴에 사용하는 API입니다. 회원의 활성화 상태가 false로 변경됩니다.",
             security = @SecurityRequirement(name = "JWT TOKEN")
     )
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4007", description = "회원 탈퇴에 실패했습니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4009", description = "회원 탈퇴에 실패했습니다.")
     })
     public ApiResponse<String> deleteMember() {
         memberCommandService.deleteMember();
@@ -128,6 +139,5 @@ public class MemberController {
         MemberProfileResponse memberProfile = memberQueryService.getMemberProfile();
         return ApiResponse.onSuccess(memberProfile);
     }
-
 
 }
