@@ -3,18 +3,21 @@ package nalance.backend.domain.member.service.impl;
 import lombok.RequiredArgsConstructor;
 import nalance.backend.domain.member.dto.MemberDTO;
 import nalance.backend.domain.member.entity.Member;
+import nalance.backend.domain.member.entity.RefreshToken;
 import nalance.backend.domain.member.repository.MemberRepository;
 import nalance.backend.domain.member.service.MemberCommandService;
 import nalance.backend.domain.terms.dto.MemberAgreeDTO;
 import nalance.backend.domain.terms.entity.MemberAgree;
 import nalance.backend.domain.terms.entity.Terms;
 import nalance.backend.domain.terms.repository.MemberAgreeRepository;
+import nalance.backend.domain.terms.repository.RefreshTokenRepository;
 import nalance.backend.domain.terms.repository.TermsRepository;
 import nalance.backend.global.error.code.status.ErrorStatus;
 import nalance.backend.global.error.handler.MemberException;
 import nalance.backend.global.error.handler.TermsException;
 import nalance.backend.global.jwt.TokenDTO;
 import nalance.backend.global.jwt.TokenProvider;
+import nalance.backend.global.jwt.TokenRequestDTO;
 import nalance.backend.global.security.SecurityUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -36,6 +39,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final MemberAgreeRepository memberAgreeRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void joinMember(MemberDTO.MemberRequest.JoinRequest request) {
@@ -76,18 +80,58 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     public TokenDTO login(MemberDTO.MemberRequest.LoginRequest request) {
         try {
-            // 1. 로그인 ID/PW를 기반으로 AuthenticationToken 생성
+//            // 1. 로그인 ID/PW를 기반으로 AuthenticationToken 생성
+//            UsernamePasswordAuthenticationToken authenticationToken = request.toAuthentication();
+//
+//            // 2. 실제로 인증 (사용자 비밀번호 체크)
+//            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+//
+//            // 3. 인증 정보를 기반으로 JWT 토큰 생성
+//            return tokenProvider.generateTokenDto(authentication);
+
             UsernamePasswordAuthenticationToken authenticationToken = request.toAuthentication();
 
-            // 2. 실제로 인증 (사용자 비밀번호 체크)
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            // 3. 인증 정보를 기반으로 JWT 토큰 생성
-            return tokenProvider.generateTokenDto(authentication);
+            TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+
+            RefreshToken refreshToken = RefreshToken.builder()
+                    .key(authentication.getName())
+                    .value(tokenDto.getRefreshToken())
+                    .build();
+
+            refreshTokenRepository.save(refreshToken);
+
+            return tokenDto;
+
         } catch (Exception e) {
             throw new MemberException(ErrorStatus.INVALID_LOGIN_CREDENTIALS);
         }
     }
+
+    @Override
+    public TokenDTO reissue(TokenRequestDTO request) {
+        if (!tokenProvider.validateToken(request.getRefreshToken())) {
+            throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
+        }
+
+        Authentication authentication = tokenProvider.getAuthentication(request.getAccessToken());
+
+        RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("로그아웃된 사용자입니다."));
+
+        if (!refreshToken.getValue().equals(request.getRefreshToken())) {
+            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+        }
+
+        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+
+        refreshToken.updateValue(tokenDto.getRefreshToken());
+        refreshTokenRepository.save(refreshToken);
+
+        return tokenDto;
+    }
+
 
     @Override
     public void updateEmail(MemberDTO.MemberRequest.MemberEmailUpdateRequest request) {

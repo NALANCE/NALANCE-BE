@@ -14,6 +14,7 @@ import nalance.backend.domain.member.service.MemberCommandService;
 import nalance.backend.domain.member.service.MemberQueryService;
 import nalance.backend.global.error.ApiResponse;
 import nalance.backend.global.jwt.TokenDTO;
+import nalance.backend.global.jwt.TokenRequestDTO;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +52,21 @@ public class MemberController {
     public ApiResponse<TokenDTO> login(@RequestBody @Valid LoginRequest loginRequest) {
         TokenDTO loginResponse = memberCommandService.login(loginRequest);
         return ApiResponse.onSuccess(loginResponse);
+    }
+
+    @PostMapping("/reissue")
+    @Operation(
+            summary = "accessToken 재발급 API",
+            description = "accessToken 만료시 refreshToken으로 accessToken을 재발급하는 API입니다. accessToken과 refreshToken값이 필요합니다.",
+            security = @SecurityRequirement(name = "JWT TOKEN")
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "아이디와 비밀번호가 일치하지 않습니다."),
+    })
+    public ApiResponse<TokenDTO> reissue(@RequestBody TokenRequestDTO request) {
+        TokenDTO reissueResponse = memberCommandService.reissue(request);
+        return ApiResponse.onSuccess(reissueResponse);
     }
 
     @PatchMapping("/email")
@@ -113,4 +129,6 @@ public class MemberController {
         MemberProfileResponse memberProfile = memberQueryService.getMemberProfile();
         return ApiResponse.onSuccess(memberProfile);
     }
+
+
 }
