@@ -1,4 +1,4 @@
-package nalance.backend.domain.terms.repository;
+package nalance.backend.domain.member.repository;
 
 import nalance.backend.domain.member.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;

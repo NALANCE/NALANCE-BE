@@ -5,19 +5,19 @@ import nalance.backend.domain.member.dto.MemberDTO;
 import nalance.backend.domain.member.entity.Member;
 import nalance.backend.domain.member.entity.RefreshToken;
 import nalance.backend.domain.member.repository.MemberRepository;
+import nalance.backend.domain.member.repository.RefreshTokenRepository;
 import nalance.backend.domain.member.service.MemberCommandService;
 import nalance.backend.domain.terms.dto.MemberAgreeDTO;
 import nalance.backend.domain.terms.entity.MemberAgree;
 import nalance.backend.domain.terms.entity.Terms;
 import nalance.backend.domain.terms.repository.MemberAgreeRepository;
-import nalance.backend.domain.terms.repository.RefreshTokenRepository;
 import nalance.backend.domain.terms.repository.TermsRepository;
 import nalance.backend.global.error.code.status.ErrorStatus;
 import nalance.backend.global.error.handler.MemberException;
 import nalance.backend.global.error.handler.TermsException;
-import nalance.backend.global.jwt.TokenDTO;
+import nalance.backend.global.jwt.dto.TokenDTO.TokenRequest;
+import nalance.backend.global.jwt.dto.TokenDTO.TokenResponse;
 import nalance.backend.global.jwt.TokenProvider;
-import nalance.backend.global.jwt.TokenRequestDTO;
 import nalance.backend.global.security.SecurityUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,9 +25,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -78,22 +75,16 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
-    public TokenDTO login(MemberDTO.MemberRequest.LoginRequest request) {
+    public TokenResponse login(MemberDTO.MemberRequest.LoginRequest request) {
         try {
-//            // 1. 로그인 ID/PW를 기반으로 AuthenticationToken 생성
-//            UsernamePasswordAuthenticationToken authenticationToken = request.toAuthentication();
-//
-//            // 2. 실제로 인증 (사용자 비밀번호 체크)
-//            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-//
-//            // 3. 인증 정보를 기반으로 JWT 토큰 생성
-//            return tokenProvider.generateTokenDto(authentication);
-
+            // 1. 로그인 ID/PW를 기반으로 AuthenticationToken 생성
             UsernamePasswordAuthenticationToken authenticationToken = request.toAuthentication();
 
+            // 2. 실제로 인증 (사용자 비밀번호 체크)
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+            // 3. 인증 정보를 기반으로 JWT 토큰 생성
+            TokenResponse tokenDto = tokenProvider.generateTokenDto(authentication);
 
             RefreshToken refreshToken = RefreshToken.builder()
                     .key(authentication.getName())
@@ -110,7 +101,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
-    public TokenDTO reissue(TokenRequestDTO request) {
+    public TokenResponse reissue(TokenRequest request) {
         if (!tokenProvider.validateToken(request.getRefreshToken())) {
             throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
         }
@@ -124,7 +115,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
-        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenResponse tokenDto = tokenProvider.generateTokenDto(authentication);
 
         refreshToken.updateValue(tokenDto.getRefreshToken());
         refreshTokenRepository.save(refreshToken);
@@ -177,6 +168,4 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         // 3. 활성화 상태 변경
         member.deactivate();
     }
-
-
 }

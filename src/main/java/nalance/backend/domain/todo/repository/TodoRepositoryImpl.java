@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import nalance.backend.domain.member.entity.Member;
 import nalance.backend.domain.todo.entity.QTodo;
 import nalance.backend.domain.todo.entity.Todo;
 import org.springframework.data.domain.Page;
@@ -24,8 +25,10 @@ public class TodoRepositoryImpl implements TodoRepositoryCustom{
     private final QTodo todo = QTodo.todo;
 
     @Override
-    public Page<Todo> findTodos(List<LocalDate> dateList, List<Long> categoryIdList, Integer status, Pageable pageable){
+    public Page<Todo> findTodos(Member member, List<LocalDate> dateList, List<Long> categoryIdList, Integer status, Pageable pageable){
         BooleanBuilder predicate = new BooleanBuilder();
+
+        predicate.and(todo.member.eq(member));
 
         if(dateList != null && !dateList.isEmpty()){
             predicate.and(todo.date.in(dateList));

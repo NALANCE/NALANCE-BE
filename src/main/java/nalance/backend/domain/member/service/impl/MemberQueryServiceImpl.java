@@ -7,10 +7,7 @@ import nalance.backend.domain.member.repository.MemberRepository;
 import nalance.backend.domain.member.service.MemberQueryService;
 import nalance.backend.global.error.code.status.ErrorStatus;
 import nalance.backend.global.error.handler.MemberException;
-import nalance.backend.global.error.handler.TermsException;
 import nalance.backend.global.security.SecurityUtil;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

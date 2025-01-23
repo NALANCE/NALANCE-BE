@@ -1,10 +1,15 @@
 package nalance.backend.domain.todo.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import nalance.backend.domain.member.entity.Member;
+import nalance.backend.domain.member.repository.MemberRepository;
 import nalance.backend.domain.todo.dto.TodoDTO;
 import nalance.backend.domain.todo.entity.Todo;
 import nalance.backend.domain.todo.repository.TodoRepository;
 import nalance.backend.domain.todo.service.TodoQueryService;
+import nalance.backend.global.error.code.status.ErrorStatus;
+import nalance.backend.global.error.handler.MemberException;
+import nalance.backend.global.security.SecurityUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +27,7 @@ import java.util.Optional;
 public class TodoQueryServiceImpl implements TodoQueryService {
 
     private final TodoRepository todoRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public Optional<Todo> findTodo(Long id) {
@@ -31,7 +37,12 @@ public class TodoQueryServiceImpl implements TodoQueryService {
     @Override
     public Page<Todo> getTodoList(TodoDTO.TodoRequest.TodoQueryRequest todoQueryRequest, Integer page) {
 
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
         return todoRepository.findTodos(
+                member,
                 todoQueryRequest.getDateList(),
                 todoQueryRequest.getCategoryIdList(),
                 todoQueryRequest.getStatus(),

@@ -29,12 +29,12 @@ public class GraphServiceImpl implements GraphService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public GraphDailyResponse getDailyGraph(String date) {
+    public GraphDailyResponse getDailyGraph(Long memberId, String date) {
         // 날짜를 LocalDateTime으로 변환
         LocalDate startOfDay = LocalDate.parse(date);
 
         // 데이터 조회
-        List<Todo> todos = todoRepository.findByDate(startOfDay);
+        List<Todo> todos = todoRepository.findByMemberIdAndDate(memberId, startOfDay);
 
         // 조회한 데이터를 이용해 응답 데이터 구성
         return GraphDailyResponse.builder()
@@ -44,12 +44,13 @@ public class GraphServiceImpl implements GraphService {
     }
 
     @Override
-    public CalendarMonthlyResponse getMonthlyCalendar(int year, int month) {
+    public CalendarMonthlyResponse getMonthlyCalendar(Long memberId, int year, int month) {
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = LocalDate.of(year, month, startOfMonth.lengthOfMonth());
 
         // 해당 월의 데이터 조회
-        List<Todo> todos = todoRepository.findByDateBetween(startOfMonth, endOfMonth);
+        List<Todo> todos = todoRepository.findByMemberIdAndDateBetween(memberId, startOfMonth, endOfMonth);
+
 
 
 

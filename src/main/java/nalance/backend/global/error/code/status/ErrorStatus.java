@@ -63,6 +63,8 @@ public enum ErrorStatus implements BaseErrorCode {
     FAIL_UPDATE_TODO(HttpStatus.BAD_REQUEST, "TODO4004", "Todo 수정에 실패했습니다."),
     FAIL_COMPLETE_TODO(HttpStatus.BAD_REQUEST, "TODO4005", "Todo 완료에 실패했습니다."),
     FAIL_QUERY_TODO(HttpStatus.BAD_REQUEST, "TODO4006", "Todo 조회에 실패했습니다."),
+    TODO_NAME_REQUIRED(HttpStatus.BAD_REQUEST, "TODO4007", "Todo 내용은 필수입니다."),
+    TODO_NOT_OWNED(HttpStatus.BAD_REQUEST, "TODO4008", "사용자가 해당 Todo를 갖고 있지 않습니다."),
 
     // Terms 관련 에러
     FAIL_GET_TERMS(HttpStatus.BAD_REQUEST, "TERMS4001", "약관 목록 조회에 실패했습니다."),

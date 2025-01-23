@@ -9,5 +9,5 @@ public interface EmailCommandService {
 
     void verificationEmailCode(VerificationEmailCodeRequest request);
 
-    void sendImageToEmail(MultipartFile file, String email);
+    void sendImageToEmail(MultipartFile file);
 }

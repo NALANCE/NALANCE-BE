@@ -9,12 +9,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import nalance.backend.domain.member.service.EmailCommandService;
 import nalance.backend.domain.member.service.MemberCommandService;
 import nalance.backend.domain.member.service.MemberQueryService;
 import nalance.backend.global.error.ApiResponse;
-import nalance.backend.global.jwt.TokenDTO;
-import nalance.backend.global.jwt.TokenRequestDTO;
+import nalance.backend.global.jwt.dto.TokenDTO.TokenResponse;
+import nalance.backend.global.jwt.dto.TokenDTO.TokenRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,8 +48,8 @@ public class MemberController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "아이디와 비밀번호가 일치하지 않습니다."),
     })
-    public ApiResponse<TokenDTO> login(@RequestBody @Valid LoginRequest loginRequest) {
-        TokenDTO loginResponse = memberCommandService.login(loginRequest);
+    public ApiResponse<TokenResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
+         TokenResponse loginResponse = memberCommandService.login(loginRequest);
         return ApiResponse.onSuccess(loginResponse);
     }
 
@@ -64,8 +63,8 @@ public class MemberController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "아이디와 비밀번호가 일치하지 않습니다."),
     })
-    public ApiResponse<TokenDTO> reissue(@RequestBody TokenRequestDTO request) {
-        TokenDTO reissueResponse = memberCommandService.reissue(request);
+    public ApiResponse<TokenResponse> reissue(@RequestBody TokenRequest request) {
+        TokenResponse reissueResponse = memberCommandService.reissue(request);
         return ApiResponse.onSuccess(reissueResponse);
     }
 

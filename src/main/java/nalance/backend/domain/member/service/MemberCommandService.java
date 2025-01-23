@@ -1,19 +1,15 @@
 package nalance.backend.domain.member.service;
 
-
-import nalance.backend.global.jwt.TokenDTO;
-import nalance.backend.global.jwt.TokenRequestDTO;
+import nalance.backend.global.jwt.dto.TokenDTO.*;
 
 import static  nalance.backend.domain.member.dto.MemberDTO.MemberRequest.*;
-import static  nalance.backend.domain.member.dto.MemberDTO.MemberResponse.*;
 
 public interface MemberCommandService {
     void joinMember(JoinRequest request);
 
-    //LoginResponse login(LoginRequest request);
-    TokenDTO login(LoginRequest request);
+    TokenResponse login(LoginRequest request);
 
-    TokenDTO reissue(TokenRequestDTO request);
+    TokenResponse reissue(TokenRequest request);
 
     void updateEmail(MemberEmailUpdateRequest request);
     void updatePassword(MemberPasswordUpdateRequest request);
