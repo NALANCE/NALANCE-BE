@@ -66,7 +66,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .allowedOriginPatterns(
                         "http://localhost:8080",
                         "http://54.180.228.18:8080",
-                        "http://localhost:3000")
+                        "http://localhost:3000",
+                        "http://localhost:5173")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .exposedHeaders("Set-Cookie")
