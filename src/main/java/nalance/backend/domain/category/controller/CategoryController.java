@@ -60,7 +60,8 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4004", description = "카테고리 색상은 필수 입니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4005", description = "해당 카테고리명은 이미 존재합니다."),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4006", description = "해당 색상은 이미 존재합니다."),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4008", description = "중복된 요청 값이 존재합니다.")
     })
     public ApiResponse<?> createManyCategory(@RequestBody @Valid List<CategoryDTO.CategoryRequest> categoryRequest){
         categoryCommandService.createManyCateory(categoryRequest);
