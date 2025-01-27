@@ -95,7 +95,7 @@ public class TodoController {
 
     @PatchMapping("/")
     @Operation(summary = "Todo 조회 API", description = """
-            Todo를 생성하는 API입니다. 유저의 토큰을 헤더로 주세요.
+            Todo를 조회하는 API입니다. 유저의 토큰을 헤더로 주세요.
             
             status 값은 1 또는 2로 주세요. (1:completed, 2:incomplete)
             """)
