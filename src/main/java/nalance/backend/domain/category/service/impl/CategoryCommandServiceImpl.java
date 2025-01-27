@@ -47,22 +47,27 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     public void createManyCateory(List<CategoryDTO.CategoryRequest> categoryRequests) {
         // 현재 로그인된 회원의 ID 가져오기
         Long memberId = SecurityUtil.getCurrentMemberId();
-        // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
-        List<String> newCategoryNames = categoryRequests.stream()
-                .map(CategoryDTO.CategoryRequest::getCategoryName)
-                .toList();
-
-        if (!categoryRequests.isEmpty()) {
-            validateCategoryNames(newCategoryNames);
+        // 각 카테고리에 대한 유효성 검증
+        for (CategoryDTO.CategoryRequest request : categoryRequests) {
+            validateCategoryNames(List.of(request.getCategoryName())); // 이름 검증
+            validateCategoryColors(List.of(request.getColor()));       // 색상 검증
         }
-        // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
-        List<String> newCategoryColors = categoryRequests.stream()
-                .map(CategoryDTO.CategoryRequest::getColor)
-                .toList();
-
-        if (!categoryRequests.isEmpty()) {
-            validateCategoryColors(newCategoryColors);
-        }
+//        // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
+//        List<String> newCategoryNames = categoryRequests.stream()
+//                .map(CategoryDTO.CategoryRequest::getCategoryName)
+//                .toList();
+//
+//        if (!categoryRequests.isEmpty()) {
+//            validateCategoryNames(newCategoryNames);
+//        }
+//        // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
+//        List<String> newCategoryColors = categoryRequests.stream()
+//                .map(CategoryDTO.CategoryRequest::getColor)
+//                .toList();
+//
+//        if (!categoryRequests.isEmpty()) {
+//            validateCategoryColors(newCategoryColors);
+//        }
         // 카테고리 리스트 생성 및 변환
         List<Category> categories = categoryRequests.stream().map(
                 categoryRequest ->  Category.builder()
