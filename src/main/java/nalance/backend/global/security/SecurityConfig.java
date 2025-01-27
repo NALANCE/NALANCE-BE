@@ -36,11 +36,11 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(
                                 new AntPathRequestMatcher("/"),
-                                new AntPathRequestMatcher("/api/v0/graph/**"),
                                 new AntPathRequestMatcher("/api/v0/emails/verification"),
                                 new AntPathRequestMatcher("/api/v0/emails/send-verification"),
                                 new AntPathRequestMatcher("/api/v0/members/signup"),
                                 new AntPathRequestMatcher("/api/v0/members/login"),
+                                new AntPathRequestMatcher("/api/v0/members/reissue"),
                                 new AntPathRequestMatcher("/api/v0/terms/**"),
                                 new AntPathRequestMatcher("/swagger-ui.html"),
                                 new AntPathRequestMatcher("/swagger-ui/**"),
@@ -68,7 +68,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                         "https://nalance-backend.store",
                         "http://localhost:8080",
                         "http://54.180.228.18:8080",
-                        "http://localhost:3000")
+                        "http://localhost:3000",
+                        "http://localhost:5173")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .exposedHeaders("Set-Cookie")

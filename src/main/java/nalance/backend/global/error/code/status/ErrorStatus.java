@@ -22,6 +22,8 @@ public enum ErrorStatus implements BaseErrorCode {
     CATEGORY_NAME_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "CATEGORY4005", "해당 카테고리명은 이미 존재합니다."),
     CATEGORY_COLOR_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "CATEGORY4006", "해당 색상은 이미 존재합니다."),
     CATEGORY_COLOR_UNUSABLE(HttpStatus.BAD_REQUEST, "CATEGORY4007", "유효하지 않은 색상입니다."),
+    CATEGORY_DUPLICATE_REQUESTS(HttpStatus.BAD_REQUEST, "CATEGORY4008", "중복 된 요청값입니다."),
+
 
     // 페이지 number 없음 에러
     INVALID_PAGE_NUMBER(HttpStatus.BAD_REQUEST,"PAGE4001","올바르지 않은 페이징 번호입니다."),
@@ -42,15 +44,14 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Member 관련 에러
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "해당 멤버가 존재하지 않습니다."),
-    FAIL_JOIN_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4002", "회원 가입에 실패했습니다."),
-    INVALID_LOGIN_CREDENTIALS(HttpStatus.BAD_REQUEST,"MEMBER4003", "아이디와 비밀번호가 일치하지 않습니다."),
-    FAIL_UPDATE_ID(HttpStatus.BAD_REQUEST, "MEMBER4004", "아이디 변경에 실패했습니다."),
-    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "MEMBER4005", "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
-    FAIL_UPDATE_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4006", "비밀번호 변경에 실패했습니다."),
-    FAIL_DELETE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4007", "회원 탈퇴에 실패했습니다."),
-    INVALID_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4008","아이디가 비어있습니다."),
-    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4009","비밀번호가 비어있습니다."),
-
+    INVALID_LOGIN_CREDENTIALS(HttpStatus.BAD_REQUEST,"MEMBER4002", "아이디와 비밀번호가 일치하지 않습니다."),
+    DEACTIVATED_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4003","탈퇴한 회원입니다."),
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST, "MEMBER4004","유효하지 않은 토큰입니다."),
+    LOGOUT_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4005","로그아웃된 사용자입니다."),
+    INVALID_EMAIL(HttpStatus.BAD_REQUEST, "MEMBER4006","아이디가 비어있습니다."),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4007","비밀번호가 비어있습니다."),
+    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "MEMBER4008", "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
+    FAIL_DELETE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4008", "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
 
     // Graph 관련 에러
     FAIL_TO_RETRIEVE_GRAPH_DATA(HttpStatus.BAD_REQUEST, "GRAPH4001", "그래프 데이터를 조회할 수 없습니다."),
