@@ -14,6 +14,7 @@ import nalance.backend.global.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,27 +48,22 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     public void createManyCateory(List<CategoryDTO.CategoryRequest> categoryRequests) {
         // 현재 로그인된 회원의 ID 가져오기
         Long memberId = SecurityUtil.getCurrentMemberId();
-        // 각 카테고리에 대한 유효성 검증
-        for (CategoryDTO.CategoryRequest request : categoryRequests) {
-            validateCategoryNames(List.of(request.getCategoryName())); // 이름 검증
-            validateCategoryColors(List.of(request.getColor()));       // 색상 검증
+        // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
+        List<String> newCategoryNames = categoryRequests.stream()
+                .map(CategoryDTO.CategoryRequest::getCategoryName)
+                .toList();
+
+        if (!categoryRequests.isEmpty()) {
+            validateCategoryNames(newCategoryNames);
         }
-//        // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
-//        List<String> newCategoryNames = categoryRequests.stream()
-//                .map(CategoryDTO.CategoryRequest::getCategoryName)
-//                .toList();
-//
-//        if (!categoryRequests.isEmpty()) {
-//            validateCategoryNames(newCategoryNames);
-//        }
-//        // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
-//        List<String> newCategoryColors = categoryRequests.stream()
-//                .map(CategoryDTO.CategoryRequest::getColor)
-//                .toList();
-//
-//        if (!categoryRequests.isEmpty()) {
-//            validateCategoryColors(newCategoryColors);
-//        }
+        // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
+        List<String> newCategoryColors = categoryRequests.stream()
+                .map(CategoryDTO.CategoryRequest::getColor)
+                .toList();
+
+        if (!categoryRequests.isEmpty()) {
+            validateCategoryColors(newCategoryColors);
+        }
         // 카테고리 리스트 생성 및 변환
         List<Category> categories = categoryRequests.stream().map(
                 categoryRequest ->  Category.builder()
@@ -114,8 +110,25 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
         categoryRepository.deleteById(categoryId);
     }
 
+    private void validateDuplicateInRequests(List<String> requests) {
+        Map<String, Long> duplicateNamesCount = requests.stream()
+                .collect(Collectors.groupingBy(request -> request, Collectors.counting())); // 빈도수 계산
+
+        // 빈도수가 2 이상인 경우 필터링해서 중복된 값만 추출
+        List<String> duplicateNamesInRequest = duplicateNamesCount.entrySet().stream()
+                .filter(entry -> entry.getValue() > 1) // 빈도수가 2 이상인 경우 필터링
+                .map(Map.Entry::getKey) // 중복된 이름만 추출
+                .toList(); // List로 변환
+
+        if (!duplicateNamesInRequest.isEmpty()) {
+            throw new CategoryException(ErrorStatus.CATEGORY_DUPLICATE_REQUESTS);
+        }
+    }
+
     // 멤버별 중복된 카테고리명 검증 메소드
     private void validateCategoryNames(List<String> categoryNames) {
+        // 중복 된 요청 값이 있는지 확인
+        validateDuplicateInRequests(categoryNames);
         // 현재 로그인된 회원의 ID 가져오기
         Long memberId = SecurityUtil.getCurrentMemberId();
         List<String> existingCategoryNames = categoryRepository.findCategoriesByMember_MemberId(memberId)
@@ -135,6 +148,8 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
 
     // 멤버별 중복된 카테고리 색상 검증 메소드
     private void validateCategoryColors(List<String> categoryColors) {
+        // 중복 된 요청 값이 있는지 확인
+        validateDuplicateInRequests(categoryColors);
         // 현재 로그인된 회원의 ID 가져오기
         Long memberId = SecurityUtil.getCurrentMemberId();
         List<String> existingCategoryColors = categoryRepository.findCategoriesByMember_MemberId(memberId)
