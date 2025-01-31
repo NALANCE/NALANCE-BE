@@ -22,10 +22,12 @@ public class CategoryDTO {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class CategoryResponse {
+        Long categoryId;
         String categoryName;
         String color;
-        public static CategoryDTO.CategoryResponse createCategory(String categoryName, String color) {
+        public static CategoryDTO.CategoryResponse createCategory(Long categoryId, String categoryName, String color) {
             return CategoryResponse.builder()
+                    .categoryId(categoryId)
                     .categoryName(categoryName)
                     .color(color)
                     .build();
