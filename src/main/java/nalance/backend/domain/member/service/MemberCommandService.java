@@ -12,6 +12,7 @@ public interface MemberCommandService {
     TokenResponse reissue(TokenRequest request);
 
     void updateEmail(MemberEmailUpdateRequest request);
+    boolean validatePassword(MemberPasswordValidationRequest request);
     void updatePassword(MemberPasswordUpdateRequest request);
     void deleteMember();
 }

@@ -61,6 +61,12 @@ public class MemberDTO {
         }
 
         @Getter
+        public static class MemberPasswordValidationRequest {
+            @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
+            private String password;
+        }
+
+        @Getter
         @PasswordMatch
         public static class MemberPasswordUpdateRequest {
             @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
