@@ -90,9 +90,9 @@ public class MemberDTO {
         public static class MemberProfileResponse {
             private Long memberId;
             private String email;
-            private String nickname;
+            //private String nickname;
             private boolean isActivated;
-            private List<MemberAgreeDTO.AgreeTermsResponse> agreedTerms; // 회원이 동의한 약관 목록
+            //private List<MemberAgreeDTO.AgreeTermsResponse> agreedTerms; // 회원이 동의한 약관 목록
         }
     }
 
