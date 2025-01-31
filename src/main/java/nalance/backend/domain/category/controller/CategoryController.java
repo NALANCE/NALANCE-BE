@@ -78,7 +78,7 @@ public class CategoryController {
     public ApiResponse<List<CategoryDTO.CategoryResponse>> getCategoriesByMember() {
         List<Category> categories = categoryQueryService.getCategoriesByMember();
         List<CategoryDTO.CategoryResponse> categoryDTOS = categories.stream().map(category ->
-                CategoryDTO.CategoryResponse.createCategory(category.getCategoryName(), category.getColor())).collect(Collectors.toList());
+                CategoryDTO.CategoryResponse.createCategory(category.getCategoryId(), category.getCategoryName(), category.getColor())).collect(Collectors.toList());
         return ApiResponse.onSuccess(categoryDTOS);
     }
 
