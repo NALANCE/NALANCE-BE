@@ -1,6 +1,7 @@
 package nalance.backend.domain.member.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import nalance.backend.domain.category.service.CategoryCommandService;
 import nalance.backend.domain.member.dto.MemberDTO;
 import nalance.backend.domain.member.entity.Member;
 import nalance.backend.domain.member.entity.RefreshToken;
@@ -37,6 +38,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final TokenProvider tokenProvider;
     private final MemberAgreeRepository memberAgreeRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final CategoryCommandService categoryCommandService;
 
     @Override
     public void joinMember(MemberDTO.MemberRequest.JoinRequest request) {
@@ -71,6 +73,11 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
                 memberAgreeRepository.save(memberAgree); // 약관 동의 저장
             }
+        }
+
+        // 5. 회원가입 후 카테고리 생성
+        if (request.getCategories() != null && !request.getCategories().isEmpty()) {
+            categoryCommandService.createManyCategoryForMember(member, request.getCategories());
         }
     }
 

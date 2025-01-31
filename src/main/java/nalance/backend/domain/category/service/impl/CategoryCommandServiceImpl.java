@@ -110,6 +110,20 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
         categoryRepository.deleteById(categoryId);
     }
 
+    // 회원 가입시에 생성하는 카테고리
+    @Override
+    public void createManyCategoryForMember(Member member, List<CategoryDTO.CategoryRequest> categoryRequests) {
+        List<Category> categories = categoryRequests.stream()
+                .map(request -> Category.builder()
+                        .categoryName(request.getCategoryName())
+                        .color(request.getColor())
+                        .member(member)
+                        .build())
+                .collect(Collectors.toList());
+
+        categoryRepository.saveAll(categories);
+    }
+
     private void validateDuplicateInRequests(List<String> requests) {
         Map<String, Long> duplicateNamesCount = requests.stream()
                 .collect(Collectors.groupingBy(request -> request, Collectors.counting())); // 빈도수 계산

@@ -27,7 +27,15 @@ public class MemberController {
     private final MemberQueryService memberQueryService;
 
     @PostMapping("/signup")
-    @Operation(summary = "회원가입 API", description = "회원가입 및 약관 동의를 처리하는 API입니다. 이메일, 비밀번호와 가입시 동의한 약관의 ID 리스트를 포함해야 합니다.")
+    @Operation(summary = "회원가입 API",
+            description = """
+           회원가입을 처리하는 API입니다.
+           
+           회원 정보를 입력하고 동의한 약관과 생성한 카테고리 정보로 회원 가입을 진행합니다.
+           
+           동의한 약관의 ID 리스트와, 생성한 카테고리 정보 리스트가 필요합니다.
+            """
+    )
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EMAIL4005", description = "이미 존재하는 이메일입니다.")
