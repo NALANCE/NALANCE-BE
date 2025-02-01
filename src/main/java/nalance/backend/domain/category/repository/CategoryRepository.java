@@ -2,6 +2,8 @@ package nalance.backend.domain.category.repository;
 
 import nalance.backend.domain.category.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +21,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     boolean existsByCategoryIdAndMember_MemberId(Long categoryId, Long memberId);
 
     Optional<Category> findByCategoryName(String categoryName);
+
+    @Query("SELECT COALESCE(MAX(mc.displayOrder), 0) FROM Category mc WHERE mc.member.memberId = :memberId")
+    Integer findMaxDisplayOrderByMember(@Param("memberId") Long memberId);
+
 
 }
 

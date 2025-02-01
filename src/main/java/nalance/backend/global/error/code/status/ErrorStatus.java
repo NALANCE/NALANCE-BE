@@ -23,6 +23,7 @@ public enum ErrorStatus implements BaseErrorCode {
     CATEGORY_COLOR_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "CATEGORY4006", "해당 색상은 이미 존재합니다."),
     CATEGORY_COLOR_UNUSABLE(HttpStatus.BAD_REQUEST, "CATEGORY4007", "유효하지 않은 색상입니다."),
     CATEGORY_DUPLICATE_REQUESTS(HttpStatus.BAD_REQUEST, "CATEGORY4008", "중복 된 요청값입니다."),
+    CATEGORY_DISPLAYORDER_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "CATEGORY4009", "유효하지 않은 순서입니다."),
 
 
     // 페이지 number 없음 에러
