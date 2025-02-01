@@ -2,6 +2,7 @@ package nalance.backend.domain.member.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
+import nalance.backend.domain.category.dto.CategoryDTO;
 import nalance.backend.domain.terms.dto.MemberAgreeDTO;
 import nalance.backend.global.validation.annotation.PasswordMatch;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +30,9 @@ public class MemberDTO {
             // 닉네임은 고려하지 않았음, 추후 수정 가능
             @NotEmpty(message = "약관 동의 항목은 비어 있을 수 없습니다.")
             private List<MemberAgreeDTO.AgreeTermsRequest> terms; //약관 동의 리스트
+
+            // 회원가입 과정에서 생성하는 카테고리 정보
+            private List<CategoryDTO.CategoryRequest> categories;
         }
 
         @Getter
