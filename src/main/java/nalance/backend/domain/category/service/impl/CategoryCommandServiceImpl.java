@@ -113,6 +113,19 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     // 회원 가입시에 생성하는 카테고리
     @Override
     public void createManyCategoryForMember(Member member, List<CategoryDTO.CategoryRequest> categoryRequests) {
+        // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
+        List<String> newCategoryNames = categoryRequests.stream()
+                .map(CategoryDTO.CategoryRequest::getCategoryName)
+                .toList();
+
+        // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
+        List<String> newCategoryColors = categoryRequests.stream()
+                .map(CategoryDTO.CategoryRequest::getColor)
+                .toList();
+
+        validateDuplicateInRequests(newCategoryNames);
+        validateDuplicateInRequests(newCategoryColors);
+
         List<Category> categories = categoryRequests.stream()
                 .map(request -> Category.builder()
                         .categoryName(request.getCategoryName())
