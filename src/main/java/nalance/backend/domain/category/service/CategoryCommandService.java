@@ -13,4 +13,5 @@ public interface CategoryCommandService {
     public Category updateCategory(CategoryDTO.CategoryUpdateRequest categoryRequest);
     public void deleteCategory(Long categoryId);
     void createManyCategoryForMember(Member member, List<CategoryDTO.CategoryRequest> categoryRequests);
+    public void updateAll(List<CategoryDTO.CategoryUpdateRequest> categoryUpdateRequests);
 }

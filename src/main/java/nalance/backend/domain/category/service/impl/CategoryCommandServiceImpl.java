@@ -11,8 +11,11 @@ import nalance.backend.global.error.code.status.ErrorStatus;
 import nalance.backend.global.error.handler.CategoryException;
 import nalance.backend.global.error.handler.MemberException;
 import nalance.backend.global.security.SecurityUtil;
+import org.springframework.aot.hint.MemberCategory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,11 +28,11 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     private final MemberRepository memberRepository;
     // Todo refactor: move create method
 
-
     @Override
     public void createOneCateory(CategoryDTO.CategoryRequest categoryRequest) {
         // 현재 로그인된 회원의 ID 가져오기
         Long memberId = SecurityUtil.getCurrentMemberId();
+        Integer maxOrder = categoryRepository.findMaxDisplayOrderByMember(memberId);
         // Valid : 멤버의 기존 카테고리 이름 중복여부 확인
         validateCategoryNames(List.of(categoryRequest.getCategoryName()));
         // Valid : 멤버의 기존 카테고리 색상 중복여부 확인
@@ -38,8 +41,8 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
                         .categoryName(categoryRequest.getCategoryName())
                         .color(categoryRequest.getColor())
                         .member(memberRepository.findById(memberId).orElseThrow(() -> new CategoryException(ErrorStatus.MEMBER_NOT_FOUND)))
-                        .build();
-
+                .displayOrder((maxOrder == null) ? 1 : maxOrder + 1)
+                .build();
         categoryRepository.save(category);
 
     }
@@ -73,6 +76,14 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
                         .build()
         ).collect(Collectors.toList());
 
+        // set displayOrder
+        Integer maxOrder = categoryRepository.findMaxDisplayOrderByMember(memberId);
+        int startOrder = (maxOrder == null) ? 1 : maxOrder + 1;
+
+        for (int i = 0; i < categories.size(); i++) {
+            categories.get(i).setDisplayOrder(startOrder + i);
+        }
+
         categoryRepository.saveAll(categories);
 
     }
@@ -98,6 +109,35 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
         category.updateCategoryDetails(categoryRequest.getCategoryName(), categoryRequest.getColor());
         return categoryRepository.save(category);
     }
+
+    @Transactional
+    public void updateCategoryOrder(List<CategoryDTO.CategoryUpdateRequest> categoryOrderList) {
+        // 현재 로그인된 회원의 ID 가져오기
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        // memberId에 해당하는 카테고리들을 가져옴
+        List<Category> categories = categoryRepository.findCategoriesByMember_MemberId(memberId);
+
+        // 요청으로 들어온 순서에 맞게 displayOrder 업데이트
+        Map<Long, Integer> orderMap = categoryOrderList.stream()
+                .collect(Collectors.toMap(CategoryDTO.CategoryUpdateRequest::getCategoryId, CategoryDTO.CategoryUpdateRequest::getDisplayOrder));
+
+        for (Category category : categories) {
+            if (orderMap.containsKey(category.getCategoryId())) {
+                category.setDisplayOrder(orderMap.get(category.getCategoryId()));
+            }
+        }
+
+        // 업데이트된 순서를 저장
+        categoryRepository.saveAll(categories);
+    }
+    public void updateAll(List<CategoryDTO.CategoryUpdateRequest> categoryUpdateRequests){
+        for(CategoryDTO.CategoryUpdateRequest categoryUpdateRequest: categoryUpdateRequests) {
+            updateCategory(categoryUpdateRequest);
+        }
+        updateCategoryOrder(categoryUpdateRequests);
+
+    }
+
 
     // 특정 멤버의 카테고리 삭제
     @Override
@@ -133,6 +173,14 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
                         .member(member)
                         .build())
                 .collect(Collectors.toList());
+        // set displayOrder
+        // Todo 리펙토링
+        Integer maxOrder = categoryRepository.findMaxDisplayOrderByMember(member.getMemberId());
+        int startOrder = (maxOrder == null) ? 1 : maxOrder + 1;
+
+        for (int i = 0; i < categories.size(); i++) {
+            categories.get(i).setDisplayOrder(startOrder + i);
+        }
 
         categoryRepository.saveAll(categories);
     }

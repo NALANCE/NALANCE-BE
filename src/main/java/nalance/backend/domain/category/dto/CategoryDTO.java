@@ -16,6 +16,7 @@ public class CategoryDTO {
         String categoryName;
         @ExistCategoryColors
         String color;
+        Integer displayOrder;
     }
     @Builder
     @Getter
@@ -25,11 +26,13 @@ public class CategoryDTO {
         Long categoryId;
         String categoryName;
         String color;
-        public static CategoryDTO.CategoryResponse createCategory(Long categoryId, String categoryName, String color) {
+        Integer displayOrder;
+        public static CategoryDTO.CategoryResponse createCategory(Long categoryId, String categoryName, String color, Integer displayOrder) {
             return CategoryResponse.builder()
                     .categoryId(categoryId)
                     .categoryName(categoryName)
                     .color(color)
+                    .displayOrder(displayOrder)
                     .build();
 
         }

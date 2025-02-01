@@ -78,7 +78,7 @@ public class CategoryController {
     public ApiResponse<List<CategoryDTO.CategoryResponse>> getCategoriesByMember() {
         List<Category> categories = categoryQueryService.getCategoriesByMember();
         List<CategoryDTO.CategoryResponse> categoryDTOS = categories.stream().map(category ->
-                CategoryDTO.CategoryResponse.createCategory(category.getCategoryId(), category.getCategoryName(), category.getColor())).collect(Collectors.toList());
+                CategoryDTO.CategoryResponse.createCategory(category.getCategoryId(), category.getCategoryName(), category.getColor(), category.getDisplayOrder())).collect(Collectors.toList());
         return ApiResponse.onSuccess(categoryDTOS);
     }
 
@@ -96,8 +96,8 @@ public class CategoryController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "CATEGORY4007", description = "유효하지 않은 색상입니다.")
     })
     public ApiResponse<?> updateCategory(
-            @RequestBody @Valid CategoryDTO.CategoryUpdateRequest categoryUpdateRequest) {
-        categoryCommandService.updateCategory(categoryUpdateRequest);
+            @RequestBody @Valid List<CategoryDTO.CategoryUpdateRequest> categoryUpdateRequests) {
+        categoryCommandService.updateAll(categoryUpdateRequests);
         return ApiResponse.onSuccess("카테고리가 수정되었습니다.");
     }
 
