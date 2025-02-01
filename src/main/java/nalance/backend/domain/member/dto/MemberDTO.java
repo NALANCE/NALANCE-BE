@@ -1,5 +1,6 @@
 package nalance.backend.domain.member.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import nalance.backend.domain.category.dto.CategoryDTO;
@@ -32,6 +33,7 @@ public class MemberDTO {
             private List<MemberAgreeDTO.AgreeTermsRequest> terms; //약관 동의 리스트
 
             // 회원가입 과정에서 생성하는 카테고리 정보
+            @Valid
             private List<CategoryDTO.CategoryRequest> categories;
         }
 
