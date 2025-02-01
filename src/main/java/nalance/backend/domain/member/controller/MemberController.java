@@ -102,6 +102,27 @@ public class MemberController {
         return ApiResponse.onSuccess("이메일 변경 성공");
     }
 
+    @PostMapping("/validate-password")
+    @Operation(
+            summary = "비밀번호 검증 API",
+            description = """
+            새로운 비밀번호가 기존 비밀번호와 같은지 검증하는 API입니다.
+            
+            새로운 비밀번호가 기존의 비밀번호와 일치하면 true를 반환합니다.
+            
+            새로운 비밀번호가 기존의 비밀번호와 다르면 false를 반환합니다.
+            """,
+            security = @SecurityRequirement(name = "JWT TOKEN")
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4001", description = "해당 멤버가 존재하지 않습니다.")
+    })
+    public ApiResponse<Boolean> validatePassword(@RequestBody @Valid MemberPasswordValidationRequest request) {
+        boolean isSame = memberCommandService.validatePassword(request);
+        return ApiResponse.onSuccess(isSame);
+    }
+
     @PatchMapping("/password")
     @Operation(
             summary = "비밀번호 변경 API",

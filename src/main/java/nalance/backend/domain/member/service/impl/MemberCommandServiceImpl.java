@@ -152,6 +152,19 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
+    public boolean validatePassword(MemberDTO.MemberRequest.MemberPasswordValidationRequest request) {
+        // 현재 로그인된 사용자의 ID 가져오기
+        Long memberId = SecurityUtil.getCurrentMemberId();
+
+        // 사용자 정보 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // 입력된 비밀번호가 기존 비밀번호와 같은지 비교
+        return passwordEncoder.matches(request.getPassword(), member.getPassword());
+    }
+
+    @Override
     public void updatePassword(MemberDTO.MemberRequest.MemberPasswordUpdateRequest request) {
         // 1. 비밀번호와 확인 비밀번호가 일치하는지 확인
         if (!request.getPassword().equals(request.getConfirmPassword())) {
