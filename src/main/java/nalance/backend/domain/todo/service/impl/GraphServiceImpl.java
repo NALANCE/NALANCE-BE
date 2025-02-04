@@ -86,9 +86,10 @@ public class GraphServiceImpl implements GraphService {
                 .map(entry -> {
                     String categoryName = entry.getKey();
                     Double ratio = (entry.getValue() / totalDuration) * 100;
-                    String color = categoryRepository.findByCategoryName(categoryName)
-                            .map(Category::getColor) // 색상 가져오기
-                            .orElseThrow(() -> new CategoryException(ErrorStatus.CATEGORY_NOT_FOUND)); // 기본 색상 지정
+                    String color = categoryRepository.findByMemberIdAndCategoryName(completedTodos.get(0).getMember().getMemberId(), categoryName) // ✅ 수정된 메서드 호출
+                            .map(Category::getColor)
+                            .orElseThrow(() -> new CategoryException(ErrorStatus.CATEGORY_NOT_FOUND));
+
 
                     return CategoryDataResponse.builder()
                             .category(categoryName)

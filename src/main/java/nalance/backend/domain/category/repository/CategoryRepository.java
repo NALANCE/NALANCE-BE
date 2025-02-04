@@ -20,7 +20,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     // 특정 멤버의 카테고리 존재 여부 확인
     boolean existsByCategoryIdAndMember_MemberId(Long categoryId, Long memberId);
 
-    Optional<Category> findByCategoryName(String categoryName);
+    @Query("SELECT c FROM Category c WHERE c.member.memberId = :memberId AND c.categoryName = :categoryName")
+    Optional<Category> findByMemberIdAndCategoryName(@Param("memberId") Long memberId, @Param("categoryName") String categoryName);
+
 
     @Query("SELECT COALESCE(MAX(mc.displayOrder), 0) FROM Category mc WHERE mc.member.memberId = :memberId")
     Integer findMaxDisplayOrderByMember(@Param("memberId") Long memberId);
