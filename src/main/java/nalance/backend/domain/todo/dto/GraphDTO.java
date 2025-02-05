@@ -14,7 +14,9 @@ public class GraphDTO {
         @AllArgsConstructor(access = AccessLevel.PROTECTED)
         public static class GraphDailyResponse {
             private String date;
-            private List<CategoryDataResponse> data; // 조회된 데이터
+            private List<CategoryDataResponse> data;
+            private boolean isBalanced; //밸런스 여부 추가
+            private String message; //메세지 추가
         }
 
         @Getter
