@@ -52,7 +52,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         ).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                ;
+        ;
         return http.build();
     }
 
