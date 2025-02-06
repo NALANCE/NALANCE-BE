@@ -10,6 +10,7 @@ import nalance.backend.global.common.enums.Status;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -39,12 +40,10 @@ public class Todo extends BaseEntity {
     private String todoName;
 
     @Column(nullable = false)
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime startTime;
+    private String startTime;
 
     @Column(nullable = false)
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime endTime;
+    private String endTime;
 
     @Column(nullable = false)
     private String formattedDuration; // "XH YM" 형식으로 저장
@@ -59,11 +58,13 @@ public class Todo extends BaseEntity {
     @Column(nullable = false)
     private Status status;
 
-    public void updateTodo(String todoName, Integer duration, LocalDate date){
+    public void updateTodo(String todoName, String startTime, String endTime, LocalDate date){
         if(todoName != null && !todoName.isBlank())
             this.todoName = todoName;
-        if(duration != null)
-            this.duration = duration;
+        if(startTime != null)
+            this.startTime = startTime;
+        if(endTime != null)
+            this.endTime = endTime;
         if(date != null)
             this.date = date;
     }
@@ -71,8 +72,6 @@ public class Todo extends BaseEntity {
     public void completeTodo(){
         this.status = Status.COMPLETED;
     }
-
-    public void updateDuration(int duration) { this.duration = duration; }
 
     public void updateFormattedDuration(String formattedDuration) { this.formattedDuration = formattedDuration; }
 }

@@ -15,12 +15,8 @@ import nalance.backend.global.error.handler.CategoryException;
 import nalance.backend.global.error.handler.MemberException;
 import nalance.backend.global.error.handler.TodoException;
 import nalance.backend.global.security.SecurityUtil;
-import nalance.backend.global.validation.annotation.ExistTodo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Duration;
-import java.time.LocalTime;
 
 @Service
 @Transactional
@@ -49,11 +45,22 @@ public class TodoCommandServiceImpl implements TodoCommandService {
     }
 
     private void setDurationFields(Todo todo){
-        LocalTime start = todo.getStartTime();
-        LocalTime end = todo.getEndTime();
+        String start = todo.getStartTime();
+        String end = todo.getEndTime();
 
-        int duration = (int) Duration.between(start, end).toMinutes();
-        todo.updateDuration(duration);
+        String[] startParts = start.split(":");
+        String[] endParts = end.split(":");
+
+        int startHour = Integer.parseInt(startParts[0]);
+        int startMinute = Integer.parseInt(startParts[1]);
+
+        int endHour = Integer.parseInt(endParts[0]);
+        int endMinute = Integer.parseInt(endParts[1]);
+
+        int startTotalMinutes = (startHour * 60) + startMinute;
+        int endTotalMinutes = (endHour * 60) + endMinute;
+
+        int duration = endTotalMinutes - startTotalMinutes;
 
         todo.updateFormattedDuration(formatDuration(duration));
     }
@@ -104,7 +111,11 @@ public class TodoCommandServiceImpl implements TodoCommandService {
             throw new TodoException(ErrorStatus.TODO_NOT_OWNED);
         }
 
-        todo.updateTodo(request.getTodoName(),request.getDuration(),request.getDate());
+        todo.updateTodo(request.getTodoName(),request.getStartTime(),request.getEndTime(),request.getDate());
+
+        if(request.getStartTime() != null || request.getEndTime() != null){
+            setDurationFields(todo);
+        }
     }
 
     @Override
