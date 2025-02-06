@@ -55,6 +55,7 @@ public class TodoDTO {
         @NoArgsConstructor(access = AccessLevel.PROTECTED)
         @AllArgsConstructor(access = AccessLevel.PROTECTED)
         public static class TodoPreviewResponse {
+            private Long todoId;
             private String todoName;
             private Integer duration;
             private LocalDate date;
