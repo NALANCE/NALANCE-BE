@@ -18,7 +18,8 @@ public class TodoConverter {
 
         return Todo.builder()
                 .todoName(request.getTodoName())
-                .duration(request.getDuration())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
                 .date(request.getDate())
                 .status(status)
                 .member(member)

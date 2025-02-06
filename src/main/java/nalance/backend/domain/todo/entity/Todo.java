@@ -1,5 +1,6 @@
 package nalance.backend.domain.todo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import nalance.backend.domain.category.entity.Category;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -37,7 +39,18 @@ public class Todo extends BaseEntity {
     private String todoName;
 
     @Column(nullable = false)
-    private Integer duration;
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime startTime;
+
+    @Column(nullable = false)
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime endTime;
+
+    @Column(nullable = false)
+    private String formattedDuration; // "XH YM" 형식으로 저장
+
+    @Column(nullable = false)
+    private Integer duration; // 분 단위 저장
 
     @Column(nullable = false)
     private LocalDate date;
@@ -58,4 +71,8 @@ public class Todo extends BaseEntity {
     public void completeTodo(){
         this.status = Status.COMPLETED;
     }
+
+    public void updateDuration(int duration) { this.duration = duration; }
+
+    public void updateFormattedDuration(String formattedDuration) { this.formattedDuration = formattedDuration; }
 }

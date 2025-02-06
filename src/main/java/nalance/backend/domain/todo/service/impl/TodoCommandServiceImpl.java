@@ -19,6 +19,9 @@ import nalance.backend.global.validation.annotation.ExistTodo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalTime;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -39,7 +42,33 @@ public class TodoCommandServiceImpl implements TodoCommandService {
                 .orElseThrow(() -> new CategoryException(ErrorStatus.CATEGORY_NOT_FOUND));
 
         Todo todo = TodoConverter.toCreateTodo(request, member, category);
+
+        setDurationFields(todo);
+
         todoRepository.save(todo);
+    }
+
+    private void setDurationFields(Todo todo){
+        LocalTime start = todo.getStartTime();
+        LocalTime end = todo.getEndTime();
+
+        int duration = (int) Duration.between(start, end).toMinutes();
+        todo.updateDuration(duration);
+
+        todo.updateFormattedDuration(formatDuration(duration));
+    }
+
+    private String formatDuration(int durationMinutes){
+        int hours = durationMinutes / 60;
+        int minutes = durationMinutes % 60;
+
+        if(hours > 0 && minutes > 0){
+            return hours + "H " + minutes + "M";
+        } else if (hours > 0) {
+            return hours + "H";
+        } else {
+            return minutes + "M";
+        }
     }
 
     @Override

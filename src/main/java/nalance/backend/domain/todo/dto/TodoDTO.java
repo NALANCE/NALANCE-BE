@@ -4,6 +4,7 @@ import lombok.*;
 import nalance.backend.global.common.enums.Status;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class TodoDTO {
@@ -14,8 +15,9 @@ public class TodoDTO {
         public static class TodoCreateRequest {
             private Long categoryId;
             private String todoName;
-            private Integer duration;
             private LocalDate date;
+            private LocalTime startTime;
+            private LocalTime endTime;
             private Integer status;
         }
 
