@@ -39,6 +39,7 @@ public class TodoConverter {
 
     public static TodoDTO.TodoResponse.TodoPreviewResponse toTodoPreviewResponse(Todo todo){
         return TodoDTO.TodoResponse.TodoPreviewResponse.builder()
+                .todoId(todo.getTodoId())
                 .todoName(todo.getTodoName())
                 .duration(todo.getDuration())
                 .date(todo.getDate())

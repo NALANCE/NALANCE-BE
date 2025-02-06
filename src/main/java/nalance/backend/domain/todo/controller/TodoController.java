@@ -93,7 +93,7 @@ public class TodoController {
         return ApiResponse.onSuccess("Todo 완료 성공");
     }
 
-    @PatchMapping("/")
+    @GetMapping("/")
     @Operation(summary = "Todo 조회 API", description = """
             Todo를 조회하는 API입니다. 유저의 토큰을 헤더로 주세요.
             
