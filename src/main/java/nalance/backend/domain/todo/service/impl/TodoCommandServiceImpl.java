@@ -15,7 +15,6 @@ import nalance.backend.global.error.handler.CategoryException;
 import nalance.backend.global.error.handler.MemberException;
 import nalance.backend.global.error.handler.TodoException;
 import nalance.backend.global.security.SecurityUtil;
-import nalance.backend.global.validation.annotation.ExistTodo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +38,44 @@ public class TodoCommandServiceImpl implements TodoCommandService {
                 .orElseThrow(() -> new CategoryException(ErrorStatus.CATEGORY_NOT_FOUND));
 
         Todo todo = TodoConverter.toCreateTodo(request, member, category);
+
+        setDurationFields(todo);
+
         todoRepository.save(todo);
+    }
+
+    private void setDurationFields(Todo todo){
+        String start = todo.getStartTime();
+        String end = todo.getEndTime();
+
+        String[] startParts = start.split(":");
+        String[] endParts = end.split(":");
+
+        int startHour = Integer.parseInt(startParts[0]);
+        int startMinute = Integer.parseInt(startParts[1]);
+
+        int endHour = Integer.parseInt(endParts[0]);
+        int endMinute = Integer.parseInt(endParts[1]);
+
+        int startTotalMinutes = (startHour * 60) + startMinute;
+        int endTotalMinutes = (endHour * 60) + endMinute;
+
+        int duration = endTotalMinutes - startTotalMinutes;
+
+        todo.updateFormattedDuration(formatDuration(duration));
+    }
+
+    private String formatDuration(int durationMinutes){
+        int hours = durationMinutes / 60;
+        int minutes = durationMinutes % 60;
+
+        if(hours > 0 && minutes > 0){
+            return hours + "H " + minutes + "M";
+        } else if (hours > 0) {
+            return hours + "H";
+        } else {
+            return minutes + "M";
+        }
     }
 
     @Override
@@ -75,7 +111,11 @@ public class TodoCommandServiceImpl implements TodoCommandService {
             throw new TodoException(ErrorStatus.TODO_NOT_OWNED);
         }
 
-        todo.updateTodo(request.getTodoName(),request.getDuration(),request.getDate());
+        todo.updateTodo(request.getTodoName(),request.getStartTime(),request.getEndTime(),request.getDate());
+
+        if(request.getStartTime() != null || request.getEndTime() != null){
+            setDurationFields(todo);
+        }
     }
 
     @Override

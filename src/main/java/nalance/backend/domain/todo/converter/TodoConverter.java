@@ -18,7 +18,8 @@ public class TodoConverter {
 
         return Todo.builder()
                 .todoName(request.getTodoName())
-                .duration(request.getDuration())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
                 .date(request.getDate())
                 .status(status)
                 .member(member)
@@ -41,7 +42,9 @@ public class TodoConverter {
         return TodoDTO.TodoResponse.TodoPreviewResponse.builder()
                 .todoId(todo.getTodoId())
                 .todoName(todo.getTodoName())
-                .duration(todo.getDuration())
+                .startTime(todo.getStartTime())
+                .endTime(todo.getEndTime())
+                .formattedDuration(todo.getFormattedDuration())
                 .date(todo.getDate())
                 .status(todo.getStatus())
                 .build();
