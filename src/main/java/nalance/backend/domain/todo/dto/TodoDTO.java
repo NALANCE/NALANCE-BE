@@ -43,13 +43,6 @@ public class TodoDTO {
             private LocalDate date;
         }
 
-        @Getter
-        public static class TodoQueryRequest {
-            private List<LocalDate> dateList;
-            private List<Long> categoryIdList;
-            private Integer status;
-        }
-
     }
 
     public static class TodoResponse{

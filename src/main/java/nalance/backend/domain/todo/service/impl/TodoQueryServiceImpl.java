@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static  nalance.backend.domain.todo.dto.TodoDTO.TodoResponse.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ public class TodoQueryServiceImpl implements TodoQueryService {
     }
 
     @Override
-    public Page<Todo> getTodoList(TodoDTO.TodoRequest.TodoQueryRequest todoQueryRequest, Integer page) {
+    public Page<Todo> getTodoList(List<LocalDate> dateList, List<Long> categoryIdList, Integer status, Integer page) {
 
         Long memberId = SecurityUtil.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
@@ -43,9 +44,9 @@ public class TodoQueryServiceImpl implements TodoQueryService {
 
         return todoRepository.findTodos(
                 member,
-                todoQueryRequest.getDateList(),
-                todoQueryRequest.getCategoryIdList(),
-                todoQueryRequest.getStatus(),
+                dateList,
+                categoryIdList,
+                status,
                 PageRequest.of(page, 10));
     }
 }
