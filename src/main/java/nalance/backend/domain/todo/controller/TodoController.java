@@ -19,8 +19,12 @@ import nalance.backend.global.validation.annotation.CheckPage;
 import nalance.backend.global.validation.annotation.ExistTodo;
 import nalance.backend.global.validation.validator.CheckPageValidator;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -106,10 +110,12 @@ public class TodoController {
     @Parameters({
             @Parameter(name = "page", description = "페이지 번호, 1번이 1 페이지 입니다.")
     })
-    public ApiResponse<TodoPreviewListResponse> getTodoList(@RequestBody @Valid TodoQueryRequest todoQueryRequest,
+    public ApiResponse<TodoPreviewListResponse> getTodoList(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) List<LocalDate> dateList,
+                                                            @RequestParam(required = false) List<Long> categoryIdList,
+                                                            @RequestParam(required = false) Integer status,
                                                             @CheckPage@RequestParam(name = "page") Integer page) {
         Integer validatedPage = checkPageValidator.validateAndTransformPage(page);
-        Page<Todo> todoList = todoQueryService.getTodoList(todoQueryRequest, validatedPage);
+        Page<Todo> todoList = todoQueryService.getTodoList(dateList, categoryIdList, status, validatedPage);
         return ApiResponse.onSuccess(TodoConverter.toTodoPreviewListResponse(todoList));
     }
 
