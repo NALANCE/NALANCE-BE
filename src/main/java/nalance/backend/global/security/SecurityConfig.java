@@ -70,7 +70,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         "http://54.180.228.18:8080",
                         "http://localhost:3000",
                         "http://localhost:5173",
-                        "https://nalance-fe.vercel.app")
+                        "https://nalance.site")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .exposedHeaders("Set-Cookie")
