@@ -73,5 +73,7 @@ public class Todo extends BaseEntity {
         this.status = Status.COMPLETED;
     }
 
+    public void updateDuration(int duration) { this.duration = duration; }
+
     public void updateFormattedDuration(String formattedDuration) { this.formattedDuration = formattedDuration; }
 }

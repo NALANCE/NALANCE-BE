@@ -62,6 +62,8 @@ public class TodoCommandServiceImpl implements TodoCommandService {
 
         int duration = endTotalMinutes - startTotalMinutes;
 
+        todo.updateDuration(duration);
+
         todo.updateFormattedDuration(formatDuration(duration));
     }
 
