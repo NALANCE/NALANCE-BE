@@ -70,7 +70,12 @@ public class Todo extends BaseEntity {
     }
 
     public void completeTodo(){
-        this.status = Status.COMPLETED;
+        if(this.status == Status.INCOMPLETE){
+            this.status = Status.COMPLETED;
+        }
+        else{
+            this.status = Status.INCOMPLETE;
+        }
     }
 
     public void updateDuration(int duration) { this.duration = duration; }
