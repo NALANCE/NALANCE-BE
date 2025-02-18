@@ -60,4 +60,9 @@ public class Member extends BaseEntity {
     public void deactivate() {
         this.isActivated = false;
     }
+
+    public void anonymize() {
+        this.email = "deleted_" + this.memberId + "@deleted.com"; // 기존 이메일을 삭제된 형태로 변경
+        this.password = ""; // 비밀번호 초기화
+    }
 }

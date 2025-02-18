@@ -27,8 +27,8 @@ public class EmailCommandServiceImpl implements EmailCommandService {
 
     @Override
     public void sendVerificationCodeToEmail(EmailSendVerificationRequest request) {
-        // 이메일 중복 확인
-        if (memberRepository.existsByEmail(request.getEmail())) {
+        // 탈퇴하지 않은 회원 중에서만 이메일 중복 확인
+        if (memberRepository.existsByEmailAndIsActivatedTrue(request.getEmail())) {
             throw new MemberException(ErrorStatus.DUPLICATE_EMAIL);
         }
 
