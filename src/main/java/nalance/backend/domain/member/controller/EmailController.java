@@ -32,7 +32,8 @@ public class EmailController {
     @Operation(summary = "인증 코드 이메일 전송 API", description = "회원가입시 이메일로 인증 코드를 보내는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EMAIL4001", description = "이메일 전송에 실패했습니다.")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EMAIL4001", description = "이메일 전송에 실패했습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EMAIL4005", description = "이미 존재하는 이메일입니다.")
     })
     public ApiResponse<String> sendVerificationCodeToEmail(
             @RequestBody @Valid EmailSendVerificationRequest emailSendVerificationRequest) {

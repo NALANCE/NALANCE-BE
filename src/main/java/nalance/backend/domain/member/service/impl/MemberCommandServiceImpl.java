@@ -42,8 +42,8 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     public void joinMember(MemberDTO.MemberRequest.JoinRequest request) {
-        // 1. 이메일 중복 확인
-        if (memberRepository.existsByEmail(request.getEmail())) {
+        // 1. 활성화된 회원 중 이메일 중복 확인
+        if (memberRepository.existsByEmailAndIsActivatedTrue(request.getEmail())) {
             throw new MemberException(ErrorStatus.DUPLICATE_EMAIL);
         }
 
@@ -193,8 +193,18 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             Member member = memberRepository.findById(memberId)
                     .orElseThrow(() -> new MemberException(ErrorStatus.MEMBER_NOT_FOUND));
 
-            // 3. 활성화 상태 변경
+            // 3. 토큰 무효화 (Refresh Token 삭제 처리)
+            refreshTokenRepository.findByKey(String.valueOf(memberId))
+                    .ifPresent(refreshTokenRepository::delete);
+
+            // 4. 활성화 상태 변경
             member.deactivate();
+
+            // 5. 이메일 및 일부 정보 익명화
+            member.anonymize();
+
+            // 6. 데이터 저장
+            memberRepository.save(member);
         } catch (Exception e) {
             throw new MemberException(ErrorStatus.FAIL_DELETE_MEMBER);
         }
