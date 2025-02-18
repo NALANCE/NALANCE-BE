@@ -27,6 +27,11 @@ public class EmailCommandServiceImpl implements EmailCommandService {
 
     @Override
     public void sendVerificationCodeToEmail(EmailSendVerificationRequest request) {
+        // 이메일 중복 확인
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new MemberException(ErrorStatus.DUPLICATE_EMAIL);
+        }
+
         try {
             emailUtil.sendCodeMessage(request.getEmail());
         } catch (Exception e) {
